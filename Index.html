@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="ember">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>NEXUS DAW v37 — Ultimate Enterprise Window Manager</title>
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#FF5A00">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root { --header-h: 48px; --dock-h: 40px; --window-h: 32px; --transition-smooth: all 0.25s cubic-bezier(0.4, 0, 0.2, 1); }
+        :root[data-theme="ember"] { --bg-deep: #030407; --bg-chassis: #0c0f15; --bg-viewport: #080a0f; --bg-panel: #0f131b; --border-hardware: #1A1F2E; --border-glow: #2D3548; --neon-primary: #FF5A00; --neon-secondary: #FFB000; --neon-accent: #FFE600; --text-main: #FFF8F0; --text-dim: #6B5D4D; }
+        :root[data-theme="obsidian"] { --bg-deep: #050609; --bg-chassis: #0b0f19; --bg-viewport: #06070b; --bg-panel: #0d121f; --border-hardware: #191f2d; --border-glow: #252f47; --neon-primary: #0077ff; --neon-secondary: #00ff55; --neon-accent: #ff0066; --text-main: #f8fafc; --text-dim: #475569; }
+        :root[data-theme="cyberpunk"] { --bg-deep: #0a0514; --bg-chassis: #1a0f2e; --bg-viewport: #0f0820; --bg-panel: #140a2d; --border-hardware: #2d1a4f; --border-glow: #4a2d7a; --neon-primary: #ff0066; --neon-secondary: #00f0ff; --neon-accent: #ff00ff; --text-main: #ffe6ff; --text-dim: #6b4d8a; }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; user-select: none; }
+        body { background: var(--bg-deep); color: var(--text-main); height: 100vh; display: flex; flex-direction: column; overflow: hidden; }
+        ::-webkit-scrollbar { width: 4px; height: 4px; }
+        ::-webkit-scrollbar-track { background: var(--bg-deep); }
+        ::-webkit-scrollbar-thumb { background: var(--border-hardware); border-radius: 2px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--neon-primary); }
+      .nexus-app-header { background: var(--bg-chassis); border-bottom: 1px solid var(--border-hardware); height: var(--header-h); display: flex; align-items: center; justify-content: space-between; padding: 0 16px; box-shadow: 0 15px 35px rgba(0,0,0,0.8), inset 0 1px 1px rgba(255,255,255,0.05); z-index: 10000; flex-shrink: 0; }
+      .rack-brand { font-weight: 700; font-size: 13px; letter-spacing: 2px; font-family: 'JetBrains Mono', monospace; }
+      .rack-brand span { color: var(--neon-primary); text-shadow: 0 0 10px color-mix(in srgb, var(--neon-primary) 40%, transparent); }
+      .transport-rack { display: flex; align-items: center; gap: 6px; }
+      .btn-console { background: var(--bg-viewport); border: 1px solid var(--border-hardware); color: var(--text-dim); padding: 5px 14px; border-radius: 4px; font-size: 11px; font-weight: 600; cursor: pointer; text-transform: uppercase; transition: var(--transition-smooth); }
+      .btn-console:hover { color: var(--text-main); border-color: var(--border-glow); }
+      .btn-console.play-active { background: color-mix(in srgb, var(--neon-secondary) 10%, transparent); color: var(--neon-secondary); border-color: var(--neon-secondary); box-shadow: 0 0 12px color-mix(in srgb, var(--neon-secondary) 30%, transparent); }
+      .theme-switcher { display: flex; gap: 4px; background: var(--bg-viewport); border: 1px solid var(--border-hardware); border-radius: 4px; padding: 3px; }
+      .theme-btn { width: 20px; height: 20px; border-radius: 3px; cursor: pointer; border: 2px solid transparent; }
+      .theme-btn.active { border-color: var(--text-main); }
+      .theme-btn[data-theme="obsidian"] { background: linear-gradient(135deg, #0077ff, #00ff55); }
+      .theme-btn[data-theme="cyberpunk"] { background: linear-gradient(135deg, #ff0066, #00f0ff); }
+      .theme-btn[data-theme="ember"] { background: linear-gradient(135deg, #FF5A00, #FFE600); }
+        #nexus-desktop { position: relative; flex: 1; overflow: hidden; }
+      .nexus-dock { position: absolute; bottom: 0; left: 0; right: 0; height: var(--dock-h); background: color-mix(in srgb, var(--bg-chassis) 90%, transparent); border-top: 1px solid var(--border-hardware); display: flex; align-items: center; padding: 0 8px; gap: 4px; backdrop-filter: blur(10px); z-index: 10001; overflow-x: auto; }
+      .dock-icon { width: 32px; height: 32px; background: var(--bg-viewport); border: 1px solid var(--border-hardware); border-radius: 4px; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 700; cursor: pointer; flex-shrink: 0; }
+      .dock-icon.active { border-color: var(--neon-primary); color: var(--neon-primary); }
+      .nexus-window { position: absolute; background: linear-gradient(135deg, color-mix(in srgb, var(--bg-chassis) 110%, black), var(--bg-chassis)); border: 2px solid var(--border-hardware); border-radius: 12px; box-shadow: 0 15px 35px rgba(0,0,0,0.8), inset 0 1px 1px rgba(255,255,255,0.05); display: flex; flex-direction: column; overflow: hidden; min-width: 320px; min-height: 200px; transition: box-shadow 0.2s; }
+      .nexus-window.active { border-color: var(--border-glow); z-index: 9999; }
+      .nexus-window.dragging { opacity: 0.85; transition: none; }
+      .nexus-window.minimized { display: none; }
+      .nexus-window.maximized { top: 0!important; left: 0!important; width: 100%!important; height: calc(100% - var(--dock-h))!important; border-radius: 0; }
+      .window-titlebar { height: var(--window-h); background: linear-gradient(to bottom, color-mix(in srgb, var(--bg-chassis) 120%, white), var(--bg-chassis)); border-bottom: 1px solid var(--border-hardware); display: flex; align-items: center; justify-content: space-between; padding: 0 12px; font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-dim); cursor: grab; flex-shrink: 0; }
+      .window-titlebar:active { cursor: grabbing; }
+      .window-titlebar.title { font-family: 'JetBrains Mono'; color: var(--neon-primary); }
+      .window-controls { display: flex; gap: 6px; }
+      .win-btn { width: 14px; height: 14px; border-radius: 3px; background: var(--bg-viewport); border: 1px solid var(--border-hardware); font-size: 9px; font-weight: bold; display: flex; align-items: center; justify-content: center; color: var(--text-dim); cursor: pointer; }
+      .win-btn:hover { color: #fff; background: var(--border-hardware); }
+      .win-btn.close:hover { background: var(--neon-primary); color: #fff; }
+      .window-content { flex: 1; background: var(--bg-panel); overflow: auto; position: relative; padding: 10px; }
+      .resize-handle { position: absolute; background: transparent; z-index: 10; }
+      .resize-handle.n { top: -3px; left: 0; right: 0; height: 6px; cursor: n-resize; }
+      .resize-handle.s { bottom: -3px; left: 0; right: 0; height: 6px; cursor: s-resize; }
+      .resize-handle.e { top: 0; right: -3px; bottom: 0; width: 6px; cursor: e-resize; }
+      .resize-handle.w { top: 0; left: -3px; bottom: 0; width: 6px; cursor: w-resize; }
+      .resize-handle.ne { top: -3px; right: -3px; width: 10px; height: 10px; cursor: ne-resize; }
+      .resize-handle.nw { top: -3px; left: -3px; width: 10px; height: 10px; cursor: nw-resize; }
+      .resize-handle.se { bottom: -3px; right: -3px; width: 10px; height: 10px; cursor: se-resize; }
+      .resize-handle.sw { bottom: -3px; left: -3px; width: 10px; height: 10px; cursor: sw-resize; }
+      .rotary-knob-hardware { width: 36px; height: 34px; border-radius: 50%; background: color-mix(in srgb, var(--bg-chassis) 80%, black); border: 2px solid var(--border-glow); position: relative; cursor: ns-resize; box-shadow: 0 4px 6px rgba(0,0,0,0.5); margin: 0 auto 4px auto; }
+      .rotary-knob-hardware::after { content: ''; position: absolute; top: 3px; left: 50%; width: 2px; height: 6px; background: var(--neon-secondary); box-shadow: 0 0 6px var(--neon-secondary); transform: translateX(-50%); }
+      .pad-matrix { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
+      .drum-pad { aspect-ratio: 1; background: var(--bg-deep); border: 1px solid var(--border-hardware); border-radius: 8px; cursor: pointer; transition: all 0.15s ease; box-shadow: inset 0 2px 6px rgba(0,0,0,0.9); }
+      .drum-pad:active { background: color-mix(in srgb, var(--neon-secondary) 15%, transparent); border-color: var(--neon-secondary); box-shadow: 0 0 12px color-mix(in srgb, var(--neon-secondary) 40%, transparent); }
+    </style>
+</head>
+<body>
+    <header class="nexus-app-header">
+        <div class="rack-brand">⚡ NEXUS DAW // <span>ULTIMATE</span></div>
+        <div class="transport-rack">
+            <button class="btn-console" id="masterPlayTrigger">▶ Play</button>
+            <button class="btn-console" id="masterStopTrigger">■ Stop</button>
+            <button class="btn-console" onclick="WM.saveLayout('studio')">💾 Save</button>
+            <div class="theme-switcher">
+                <div class="theme-btn" data-theme="obsidian" title="Obsidian"></div>
+                <div class="theme-btn" data-theme="cyberpunk" title="Cyberpunk"></div>
+                <div class="theme-btn active" data-theme="ember" title="Ember"></div>
+            </div>
+        </div>
+        <div style="font-size: 10px; font-family: 'JetBrains Mono'; color: var(--text-dim);">
+            WM: <span id="layout-name" style="color: var(--neon-secondary);">DEFAULT</span> |
+            <span style="color: var(--neon-secondary);">● ONLINE</span>
+        </div>
+    </header>
+    <div id="nexus-desktop"></div>
+    <div class="nexus-dock" id="nexus-dock"></div>
+    <script type="module">
+        class NexusWindowManager {
+            constructor() { this.windows = new Map(); this.zIndex = 100; this.layouts = JSON.parse(localStorage.getItem('nexus_layouts') || '{}'); this.init(); }
+            init() { this.createDefaultLayout(); this.initThemeSwitcher(); this.initShortcuts(); window.addEventListener('beforeunload', () => this.saveLayout('default')); if ('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js'); }
+            initThemeSwitcher() { document.querySelectorAll('.theme-btn').forEach(btn => { btn.addEventListener('click', () => { const theme = btn.dataset.theme; document.documentElement.setAttribute('data-theme', theme); document.querySelectorAll('.theme-btn').forEach(b => b.classList.remove('active')); btn.classList.add('active'); localStorage.setItem('nexus_theme', theme); }); }); const savedTheme = localStorage.getItem('nexus_theme') || 'ember'; document.documentElement.setAttribute('data-theme', savedTheme); document.querySelector(`.theme-btn[data-theme="${savedTheme}"]`)?.classList.add('active'); }
+            initShortcuts() { document.addEventListener('keydown', e => { if (e.target.tagName === 'INPUT') return; if (e.code === 'Space') { e.preventDefault(); document.getElementById('masterPlayTrigger').click(); } if (e.ctrlKey && e.code === 'KeyS') { e.preventDefault(); this.saveLayout('studio'); } if (e.ctrlKey && e.code === 'KeyM') { e.preventDefault(); this.windows.forEach(w => w.el.classList.add('minimized')); } }); }
+            createWindow(config) { const id = config.id; if (this.windows.has(id)) { this.focusWindow(id); return; } const win = document.createElement('div'); win.className = 'nexus-window'; win.id = id; win.style.left = config.x || '100px'; win.style.top = config.y || '100px'; win.style.width = config.w || '400px'; win.style.height = config.h || '300px'; win.innerHTML = `<div class="window-titlebar" data-drag="${id}"><span class="title">${config.icon || '📦'} ${config.title}</span><div class="window-controls"><div class="win-btn" data-action="minimize" data-id="${id}">—</div><div class="win-btn" data-action="maximize" data-id="${id}">□</div><div class="win-btn close" data-action="close" data-id="${id}">✕</div></div></div><div class="window-content" id="${id}_content">${config.content || ''}</div><div class="resize-handle n" data-resize="n" data-id="${id}"></div><div class="resize-handle s" data-resize="s" data-id="${id}"></div><div class="resize-handle e" data-resize="e" data-id="${id}"></div><div class="resize-handle w" data-resize="w" data-id="${id}"></div><div class="resize-handle ne" data-resize="ne" data-id="${id}"></div><div class="resize-handle nw" data-resize="nw" data-id="${id}"></div><div class="resize-handle se" data-resize="se" data-id="${id}"></div><div class="resize-handle sw" data-resize="sw" data-id="${id}"></div>`; document.getElementById('nexus-desktop').appendChild(win); this.windows.set(id, { el: win, config }); this.bindWindowEvents(win, id); this.addDockIcon(id, config.icon || '📦'); this.focusWindow(id); }
+            bindWindowEvents(win, id) { win.addEventListener('mousedown', () => this.focusWindow(id)); win.querySelectorAll('[data-action]').forEach(btn => { btn.addEventListener('click', (e) => { e.stopPropagation(); this.windowAction(id, btn.dataset.action); }); }); win.querySelector('[data-drag]').addEventListener('pointerdown', (e) => this.startDrag(e, id)); win.querySelectorAll('[data-resize]').forEach(handle => { handle.addEventListener('pointerdown', (e) => this.startResize(e, id, handle.dataset.resize)); }); }
+            windowAction(id, action) { const win = this.windows.get(id).el; if (action === 'minimize') win.classList.toggle('minimized'); if (action === 'maximize') win.classList.toggle('maximized'); if (action === 'close') { win.remove(); this.windows.delete(id); document.querySelector(`[data-win="${id}"]`)?.remove(); } }
+            focusWindow(id) { this.windows.forEach((w, wid) => { w.el.classList.toggle('active', wid === id); if (wid === id) w.el.style.zIndex = ++this.zIndex; }); }
+            startDrag(e, id) { const win = this.windows.get(id).el; if (win.classList.contains('maximized')) return; win.classList.add('dragging'); const startX = e.clientX - win.offsetLeft, startY = e.clientY - win.offsetTop; const onMove = (e) => { win.style.left = (e.clientX - startX) + 'px'; win.style.top = (e.clientY - startY) + 'px'; }; const onUp = () => { win.classList.remove('dragging'); window.removeEventListener('pointermove', onMove); window.removeEventListener('pointerup', onUp); }; window.addEventListener('pointermove', onMove); window.addEventListener('pointerup', onUp); }
+            startResize(e, id, dir) { const win = this.windows.get(id).el; const startX = e.clientX, startY = e.clientY; const startW = win.offsetWidth, startH = win.offsetHeight; const startL = win.offsetLeft, startT = win.offsetTop; const onMove = (e) => { if (dir.includes('e')) win.style.width = (startW + e.clientX - startX) + 'px'; if (dir.includes('s')) win.style.height = (startH + e.clientY - startY) + 'px'; if (dir.includes('w')) { win.style.width = (startW - e.clientX + startX) + 'px'; win.style.left = (startL + e.clientX - startX) + 'px'; } if (dir.includes('n')) { win.style.height = (startH - e.clientY + startY) + 'px'; win.style.top = (startT + e.clientY - startY) + 'px'; } }; const onUp = () => { window.removeEventListener('pointermove', onMove); window.removeEventListener('pointerup', onUp); }; window.addEventListener('pointermove', onMove); window.addEventListener('pointerup', onUp); }
+            addDockIcon(id, icon) { const dock = document.getElementById('nexus-dock'); const dockIcon = document.createElement('div'); dockIcon.className = 'dock-icon'; dockIcon.textContent = icon; dockIcon.dataset.win = id; dockIcon.onclick = () => { const win = this.windows.get(id).el; if (win.classList.contains('minimized')) win.classList.remove('minimized'); this.focusWindow(id); }; dock.appendChild(dockIcon); }
+            saveLayout(name) { const layout = {}; this.windows.forEach((w, id) => { const el = w.el; layout[id] = { x: el.style.left, y: el.style.top, w: el.style.width, h: el.style.height, config: w.config }; }); this.layouts[name] = layout; localStorage.setItem('nexus_layouts', JSON.stringify(this.layouts)); document.getElementById('layout-name').textContent = name.toUpperCase(); }
+            createDefaultLayout() {
+                this.createWindow({ id: 'win_asset_browser', title: 'Asset Browser', icon: '📁', x: '20px', y: '60px', w: '280px', h: '600px', content: `<div style="padding:10px;font-size:10px;"><div style="margin-bottom:8px;"><b>Project Explorer</b></div><div style="padding:4px;border:1px solid var(--border-hardware);border-radius:4px;margin-bottom:4px;">🥁 808 Drum Kit</div><div style="padding:4px;border:1px solid var(--border-hardware);border-radius:4px;">🎹 Sawtooth Lead</div></div>` });
+                this.createWindow({ id: 'win_playlist', title: 'Playlist Arranger', icon: '🎚️', x: '320px', y: '60px', w: '800px', h: '400px', content: `<div style="padding:10px;font-size:10px;">Timeline Grid + Clips<br><div style="margin-top:10px;height:30px;border-bottom:1px solid var(--border-hardware);display:flex;align-items:center;">Drums</div><div style="height:30px;border-bottom:1px solid var(--border-hardware);display:flex;align-items:center;">Bass</div><div style="height:30px;border-bottom:1px solid var(--border-hardware);display:flex;align-items:center;">Synth</div></div>` });
+                this.createWindow({ id: 'win_pianoroll', title: 'Piano Roll', icon: '🎹', x: '320px', y: '480px', w: '390px', h: '250px', content: `<div style="padding:10px;font-size:10px;">MIDI Editor</div>` });
+                this.createWindow({ id: 'win_sequencer', title: 'Step Sequencer', icon: '🎛️', x: '730px', y: '480px', w: '390px', h: '250px', content: `<div class="pad-matrix" style="padding:10px;">${'<div class="drum-pad"></div>'.repeat(16)}</div>` });
+                this.createWindow({ id: 'win_mixer', title: 'Mixer', icon: '🎚️', x: '1140px', y: '60px', w: '340px', h: '300px', content: `<div style="padding:10px;font-size:10px;">Channel Strips<br><div style="display:flex;gap:8px;margin-top:10px;"><div style="flex:1;text-align:center;"><div class="rotary-knob-hardware"></div><span style="font-size:8px;color:var(--text-dim);">VOL</span></div><div style="flex:1;text-align:center;"><div class="rotary-knob-hardware"></div><span style="font-size:8px;color:var(--text-dim);">PAN</span></div></div></div>` });
+                this.createWindow({ id: 'win_scope', title: 'Oscilloscope', icon: '📊', x: '1140px', y: '380px', w: '340px', h: '200px', content: `<canvas id="scope-canvas" style="width:100%;height:100%;"></canvas>` });
+                this.createWindow({ id: 'win_ai', title: 'AI Composer', icon: '🤖', x: '1500px', y: '60px', w: '300px', h: '180px', content: `<div style="padding:10px;font-size:10px;"><div style="padding:6px;border:1px solid var(--border-hardware);border-radius:4px;margin-bottom:4px;cursor:pointer;">⚡ Generate Melody →</div><div style="padding:6px;border:1px solid var(--border-hardware);border-radius:4px;cursor:pointer;">🥁 Auto-Quantize →</div></div>` });
+                const samplers = [ { id: 'vst_tx16wx', name: 'TX16Wx', icon: '🎹', desc: 'Pro multi-sampler' }, { id: 'vst_decent', name: 'Decent Sampler', icon: '📀', desc: 'Lightweight SFZ' }, { id: 'vst_kontakt', name: 'Kontakt Player', icon: '🎼', desc: 'Industry standard' }, { id: 'vst_labs', name: 'Spitfire LABS', icon: '🎻', desc: 'Free instruments' }, { id: 'vst_sitala', name: 'Sitala', icon: '🥁', desc: '16-pad drum' }, { id: 'vst_sforzando', name: 'sforzando', icon: '🎵', desc: 'Accurate SFZ' }, { id: 'vst_grace', name: 'Grace', icon: '🖱️', desc: 'Visual sampler' }, { id: 'vst_poise', name: 'Poise', icon: '🥁', desc: 'MPC-style' }, { id: 'vst_momentum', name: 'Momentum', icon: '🔄', desc: 'Loop slicer' }, { id: 'vst_halion', name: 'HALion Sonic', icon: '🎹', desc: 'Thousands of sounds' }, { id: 'vst_zampler', name: 'Zampler', icon: '〰️', desc: 'SFZ + wavetable' }, { id: 'vst_instant', name: 'Instant Sampler', icon: '🎙️', desc: 'Live audio buffer' }, { id: 'vst_speedrum', name: 'Speedrum Lite', icon: '⚡', desc: '16 pads' }, { id: 'vst_justasample', name: 'Just a Sample', icon: '1️⃣', desc: 'Drop 1 file' }, { id: 'vst_hz', name: 'HZ Sampler', icon: '🌊', desc: 'Grain + pitch' }, { id: 'vst_independence', name: 'Independence', icon: '🎸', desc: '2GB library' }, { id: 'vst_grooove', name: 'Grooove BPB', icon: '🎯', desc: 'Dual-sample slots' }, { id: 'vst_zebralette', name: 'Zebralette 3', icon: '🦓', desc: 'Audio → wavetable' }, { id: 'vst_kungfaux', name: 'Kung Faux', icon: '📼', desc: 'Lo-fi 12-bit' }, { id: 'vst_serato', name: 'Serato Sample', icon: '🎧', desc: 'Pitch n Time' } ];
+                samplers.forEach((s, i) => { this.createWindow({ id: s.id, title: s.name, icon: s.icon, x: (50 + (i % 5) * 320) + 'px', y: (80 + Math.floor(i / 5) * 280) + 'px', w: '300px', h: '240px', content: `<div style="padding:10px;font-size:10px;"><div style="margin-bottom:8px;color:var(--text-dim);">${s.desc}</div><div style="display:flex;gap:8px;"><div style="flex:1;text-align:center;"><div class="rotary-knob-hardware"></div><span style="font-size:8px;color:var(--text-dim);">TUNE</span></div><div style="flex:1;text-align:center;"><div class="rotary-knob-hardware"></div><span style="font-size:8px;color:var(--text-dim);">FILTER</span></div><div style="flex:1;text-align:center;"><div class="rotary-knob-hardware"></div><span style="font-size:8px;color:var(--text-dim);">VOL</span></div></div></div>` }); document.getElementById(s.id).style.display = 'none'; });
+            }
+        }
+        const WM = new NexusWindowManager();
+        document.getElementById('masterPlayTrigger').onclick = function() { this.classList.toggle('play-active'); };
+        function runScope() { const canvas = document.getElementById('scope-canvas'); if (!canvas) return; const ctx = canvas.getContext('2d'); const w = canvas.width = canvas.offsetWidth; const h = canvas.height = canvas.offsetHeight; ctx.fillStyle = '#05070b'; ctx.fillRect(0, 0, w, h); ctx.strokeStyle = getComputedStyle(document.documentElement).getPropertyValue('--neon-secondary'); ctx.lineWidth = 1.5; ctx.beginPath(); for (let i = 0; i < w; i++) { const y = h/2 + Math.sin(i * 0.05 + Date.now() * 0.003) * h * 0.3; i === 0? ctx.moveTo(i, y) : ctx.lineTo(i, y); } ctx.stroke(); requestAnimationFrame(runScope); }
+        setTimeout(runScope, 100);
+    </script>
+</body>
+</html>
