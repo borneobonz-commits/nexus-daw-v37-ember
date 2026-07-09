@@ -1,0 +1,18 @@
+{
+  "name": "NEXUS DAW v37 Ultimate",
+  "short_name": "NEXUS DAW",
+  "description": "Enterprise Modular Studio Control Console - 30 Windows + EMBER Theme",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#030407",
+  "theme_color": "#FF5A00",
+  "orientation": "landscape",
+  "icons": [
+    {
+      "src": "icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
