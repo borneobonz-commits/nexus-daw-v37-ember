@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>NEXUS DAW v38 OMNIVERSE - Piano Roll + FX + Mixer</title>
+<title>NEXUS DAW v39 MAESTRO - Arpeggiator + ADSR + Scale Lock + EQ + LFO + Spectrum</title>
 <link rel="manifest" href="manifest.json">
 <style>
 :root[data-theme="ember"] {
@@ -13,39 +13,41 @@
 }
 *{margin:0;padding:0;box-sizing:border-box}
 body{background:var(--bg-deep);color:var(--text-main);font-family:'JetBrains Mono',monospace;font-size:11px;overflow:hidden;height:100vh}
-.nexus-dock{position:fixed;bottom:8px;left:50%;transform:translateX(-50%);background:var(--bg-console);border:1px solid var(--border-hardware);padding:8px;display:flex;gap:6px;z-index:9999}
+.nexus-dock{position:fixed;bottom:8px;left:50%;transform:translateX(-50%);background:var(--bg-console);border:1px solid var(--border-hardware);padding:8px;display:flex;gap:6px;z-index:9999;flex-wrap:wrap;justify-content:center;max-width:90%}
 .dock-btn{width:40px;height:40px;background:var(--bg-rack);border:1px solid var(--border-hardware);color:var(--neon-secondary);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:18px}
 .dock-btn:hover{border-color:var(--neon-primary);color:var(--neon-primary)}
-.window{position:absolute;background:var(--bg-window);border:1px solid var(--border-hardware);min-width:380px;box-shadow:0 8px 32px rgba(0,0,0,0.8);overflow:hidden}
-.window-header{background:var(--bg-rack);padding:6px 8px;border-bottom:1px solid var(--border-hardware);cursor:move;display:flex;justify-content:space-between;align-items:center}
+.window{position:absolute;background:var(--bg-window);border:1px solid var(--border-hardware);min-width:300px;box-shadow:0 8px 32px rgba(0,0,0,0.8);overflow:hidden;display:flex;flex-direction:column}
+.window-header{background:var(--bg-rack);padding:6px 8px;border-bottom:1px solid var(--border-hardware);cursor:move;display:flex;justify-content:space-between;align-items:center;flex-shrink:0}
 .window-title{color:var(--neon-secondary);font-weight:700;font-size:10px;letter-spacing:1px}
 .window-controls{display:flex;gap:4px}
 .win-btn{width:16px;height:16px;background:var(--bg-console);border:1px solid var(--border-hardware);color:var(--text-dim);cursor:pointer;font-size:8px;display:flex;align-items:center;justify-content:center}
 .win-btn:hover{background:var(--neon-primary);color:#000}
-.window-body{padding:12px;overflow:auto;height:calc(100% - 30px)}
+.window-body{padding:12px;overflow:auto;flex:1}
 .sf2-input{width:100%;background:var(--bg-deep);border:1px solid var(--border-hardware);color:var(--text-main);padding:6px;font-size:10px;margin-bottom:6px}
 .sf2-btn{width:100%;background:var(--neon-primary);border:none;color:#000;padding:8px;font-size:10px;font-weight:700;cursor:pointer;margin-bottom:6px}
 .sf2-btn:hover{background:var(--neon-secondary)}
 .sf2-status{font-size:9px;color:var(--text-dim);padding:4px;background:var(--bg-deep);border:1px solid var(--border-hardware);margin-bottom:8px}
-.instrument-select{width:100%;background:var(--bg-deep);border:1px solid var(--border-hardware);color:var(--neon-accent);padding:6px;font-size:10px;margin-bottom:8px}
+.instrument-select,.ctrl-select{width:100%;background:var(--bg-deep);border:1px solid var(--border-hardware);color:var(--neon-accent);padding:6px;font-size:10px;margin-bottom:8px}
 .controls-row{display:flex;gap:6px;margin-bottom:8px}
 .ctrl-group{flex:1}
 .ctrl-label{font-size:8px;color:var(--text-dim);margin-bottom:2px;display:block}
-.ctrl-slider{width:100%;height:4px;background:var(--bg-deep);appearance:none;border:1px solid var(--border-hardware)}
-.ctrl-slider::-webkit-slider-thumb{appearance:none;width:12px;height:12px;background:var(--neon-primary);cursor:pointer}
+.ctrl-slider{width:100%;height:4px;background:var(--bg-deep);appearance:none;border:1px solid var(--border-hardware);cursor:pointer}
+.ctrl-slider::-webkit-slider-thumb{appearance:none;width:12px;height:12px;background:var(--neon-primary);cursor:pointer;border-radius:50%}
+.ctrl-slider::-moz-range-thumb{width:12px;height:12px;background:var(--neon-primary);cursor:pointer;border-radius:50%;border:none}
 .mode-toggle{background:var(--bg-rack);border:1px solid var(--border-hardware);color:var(--neon-secondary);padding:4px 8px;font-size:9px;cursor:pointer;margin-bottom:8px;width:100%}
 .mode-toggle.active{background:var(--neon-primary);color:#000;border-color:var(--neon-primary)}
-.transport{display:flex;gap:6px;margin-bottom:8px}
-.transport-btn{flex:1;background:var(--bg-rack);border:1px solid var(--border-hardware);color:var(--neon-secondary);padding:8px;font-size:10px;font-weight:700;cursor:pointer}
+.transport{display:flex;gap:6px;margin-bottom:8px;flex-wrap:wrap}
+.transport-btn{flex:1;min-width:60px;background:var(--bg-rack);border:1px solid var(--border-hardware);color:var(--neon-secondary);padding:8px;font-size:10px;font-weight:700;cursor:pointer}
 .transport-btn.rec{background:var(--rec-red);color:#fff;border-color:var(--rec-red)}
 .transport-btn.play{background:var(--play-green);color:#000;border-color:var(--play-green)}
 .transport-btn.rec.active,.transport-btn.play.active{animation:pulse 1s infinite}
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:0.5}}
 .midi-status{font-size:8px;color:var(--neon-accent);padding:4px;background:var(--bg-deep);border:1px solid var(--border-hardware);margin-bottom:8px;text-align:center}
 .kbd{display:grid;grid-template-columns:repeat(7,1fr);gap:2px}
-.key{height:40px;background:var(--bg-rack);border:1px solid var(--border-hardware);cursor:pointer}
+.key{height:40px;background:var(--bg-rack);border:1px solid var(--border-hardware);cursor:pointer;transition:0.1s}
 .key:active,.key.active{background:var(--neon-primary)}
 .key.black{background:var(--bg-deep);height:25px;transform:translateY(-15px)}
+.key.disabled{opacity:0.3;cursor:not-allowed}
 .drum-pad{display:grid;grid-template-columns:repeat(4,1fr);gap:4px}
 .pad{height:60px;background:var(--bg-rack);border:1px solid var(--border-hardware);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:8px;color:var(--text-dim)}
 .pad:active{background:var(--neon-primary);color:#000;border-color:var(--neon-accent)}
@@ -58,22 +60,30 @@ body{background:var(--bg-deep);color:var(--text-main);font-family:'JetBrains Mon
 .seq-step.playing{border-color:var(--neon-accent);box-shadow:0 0 8px var(--neon-accent)}
 .bpm-input{width:60px;background:var(--bg-deep);border:1px solid var(--border-hardware);color:var(--neon-accent);padding:4px;font-size:10px;text-align:center}
 .pianoroll{height:200px;background:var(--bg-deep);border:1px solid var(--border-hardware);position:relative;overflow:auto;margin-top:8px}
-.pr-grid{position:absolute;inset:0;background-image:linear-gradient(var(--border-hardware) 1px, transparent 1px),linear-gradient(90deg, var(--border-hardware) 1px, transparent 1px);background-size:40px 20px}
-.pr-note{position:absolute;height:18px;background:var(--neon-primary);border:1px solid var(--neon-accent);cursor:move;font-size:7px;color:#000;padding:0 2px;display:flex;align-items:center}
+.pr-grid{position:absolute;inset:0;background-image:linear-gradient(var(--border-hardware) 1px, transparent 1px),linear-gradient(90deg, var(--border-hardware) 1px, transparent 1px);background-size:40px 20px;z-index:1}
+.pr-note{position:absolute;height:18px;background:var(--neon-primary);border:1px solid var(--neon-accent);cursor:move;font-size:7px;color:#000;padding:0 2px;display:flex;align-items:center;z-index:2}
 .fx-row{display:flex;gap:6px;margin-bottom:6px;align-items:center}
 .fx-label{width:60px;font-size:8px;color:var(--neon-secondary)}
-.fx-knob{flex:1;height:4px;background:var(--bg-deep);appearance:none;border:1px solid var(--border-hardware)}
-.fx-knob::-webkit-slider-thumb{appearance:none;width:12px;height:12px;background:var(--neon-secondary);cursor:pointer}
+.fx-knob{flex:1;height:4px;background:var(--bg-deep);appearance:none;border:1px solid var(--border-hardware);cursor:pointer}
+.fx-knob::-webkit-slider-thumb{appearance:none;width:12px;height:12px;background:var(--neon-secondary);cursor:pointer;border-radius:50%}
 .mixer{margin-top:8px;border-top:1px solid var(--border-hardware);padding-top:8px}
 .mix-ch{display:flex;gap:4px;margin-bottom:4px;align-items:center}
 .mix-label{width:40px;font-size:8px;color:var(--text-dim)}
-.mix-fader{flex:1;height:4px;background:var(--bg-deep);appearance:none;border:1px solid var(--border-hardware)}
-.mix-fader::-webkit-slider-thumb{appearance:none;width:12px;height:12px;background:var(--neon-accent);cursor:pointer}
+.mix-fader{flex:1;height:4px;background:var(--bg-deep);appearance:none;border:1px solid var(--border-hardware);cursor:pointer}
+.mix-fader::-webkit-slider-thumb{appearance:none;width:12px;height:12px;background:var(--neon-accent);cursor:pointer;border-radius:50%}
 .mix-btn{width:20px;height:20px;background:var(--bg-rack);border:1px solid var(--border-hardware);color:var(--text-dim);font-size:8px;cursor:pointer}
 .mix-btn.active{background:var(--neon-primary);color:#000}
+.envelope-display{width:100%;height:100px;background:var(--bg-deep);border:1px solid var(--border-hardware);margin-bottom:8px;position:relative}
+.spectrum-canvas{width:100%;height:120px;background:var(--bg-deep);border:1px solid var(--border-hardware);margin-top:8px}
+.row-label{font-size:9px;color:var(--neon-secondary);margin-bottom:4px;margin-top:8px;font-weight:700}
+.btn-small{background:var(--bg-rack);border:1px solid var(--border-hardware);color:var(--neon-secondary);padding:4px 8px;font-size:8px;cursor:pointer;margin:2px}
+.btn-small:hover{border-color:var(--neon-primary);color:var(--neon-primary)}
+.btn-small.active{background:var(--neon-primary);color:#000}
 .chop-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:4px;margin-top:8px}
 .chop-pad{height:50px;background:var(--bg-rack);border:1px solid var(--border-hardware);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:8px;color:var(--neon-secondary)}
 .chop-pad.loaded{background:var(--neon-primary);color:#000}
+.save-btn{width:100%;background:var(--play-green);border:none;color:#000;padding:8px;font-size:10px;font-weight:700;cursor:pointer;margin:4px 0}
+.load-btn{width:100%;background:var(--neon-secondary);border:none;color:#000;padding:8px;font-size:10px;font-weight:700;cursor:pointer;margin:4px 0}
 </style>
 </head>
 <body>
@@ -82,10 +92,15 @@ body{background:var(--bg-deep);color:var(--text-main);font-family:'JetBrains Mon
 <div class="nexus-dock">
   <button class="dock-btn" onclick="openDecentSampler()" title="Decent Sampler">🎹</button>
   <button class="dock-btn" onclick="openSequencer()" title="16-Step Sequencer">🎛️</button>
+  <button class="dock-btn" onclick="openArpeggiator()" title="Arpeggiator">🎵</button>
+  <button class="dock-btn" onclick="openADSR()" title="ADSR Envelope">📈</button>
+  <button class="dock-btn" onclick="openScaleLock()" title="Scale Lock">🎹</button>
   <button class="dock-btn" onclick="openPianoRoll()" title="Piano Roll">🎼</button>
   <button class="dock-btn" onclick="openFXRack()" title="FX Rack">🎚️</button>
-  <button class="dock-btn" onclick="openMixer()" title="8-Ch Mixer">📊</button>
-  <button class="dock-btn" onclick="openChopper()" title="Sample Chopper">✂️</button>
+  <button class="dock-btn" onclick="openMixerEQ()" title="Mixer + EQ">📊</button>
+  <button class="dock-btn" onclick="openLFO()" title="LFO Modulator">〰️</button>
+  <button class="dock-btn" onclick="openSpectrum()" title="Spectrum Analyzer">📉</button>
+  <button class="dock-btn" onclick="openSaveLoad()" title="Save/Load Project">💾</button>
   <button class="dock-btn" onclick="toggleTheme()" title="Switch Theme">🎨</button>
 </div>
 
@@ -105,7 +120,7 @@ let recordedChunks = [];
 let midiAccess = null;
 
 // TONE.JS FX CHAIN
-let reverb, delay, chorus, masterGain;
+let reverb, delay, chorus, masterGain, analyser;
 let mixerChannels = Array(8).fill().map(() => new Tone.Channel().toDestination());
 
 // SEQUENCER STATE
@@ -113,18 +128,52 @@ let seqPlaying = false;
 let seqStep = 0;
 let seqBPM = 120;
 let seqInterval = null;
-let seqPattern = {
-  kick: new Array(16).fill(0),
-  snare: new Array(16).fill(0),
-  hihat: new Array(16).fill(0),
-  note: new Array(16).fill(0)
+let seqPattern = {kick: Array(16).fill(0), snare: Array(16).fill(0), hihat: Array(16).fill(0), note: Array(16).fill(0)};
+
+// ARPEGGIATOR STATE
+let arpActive = false;
+let arpMode = 'up';
+let arpSpeed = 100;
+let arpOctave = 1;
+let arpNotes = [];
+let arpIndex = 0;
+let arpInterval = null;
+
+// ADSR STATE
+let adsrAttack = 0.1;
+let adsrDecay = 0.2;
+let adsrSustain = 0.7;
+let adsrRelease = 0.3;
+
+// SCALE LOCK STATE
+let scaleLockActive = false;
+let scaleType = 'major';
+let scaleRoot = 60;
+const SCALES = {
+  major: [0,2,4,5,7,9,11],
+  minor: [0,2,3,5,7,8,10],
+  pentatonic_major: [0,2,4,7,9],
+  pentatonic_minor: [0,3,5,7,10],
+  blues: [0,3,5,6,7,10],
+  dorian: [0,2,3,5,7,9,10]
 };
+
+// LFO STATE
+let lfoActive = false;
+let lfoWaveform = 'sine';
+let lfoFreq = 5;
+let lfoDepth = 0.3;
+let lfoTarget = 'volume';
+let lfoPhase = 0;
 
 // PIANO ROLL STATE
 let prNotes = [];
 
 // CHOPPER STATE
 let chopSamples = Array(16).fill(null);
+
+// PROJECT STATE
+let projectName = 'NEXUS_DAW_Project';
 
 const GM_INSTRUMENTS = [
   '0: Acoustic Grand Piano','4: Electric Piano 1','24: Acoustic Guitar nylon','25: Acoustic Guitar steel',
@@ -152,14 +201,13 @@ async function initFX() {
   delay = new Tone.FeedbackDelay({delayTime: "8n", feedback: 0.3, wet: 0}).connect(reverb);
   chorus = new Tone.Chorus({frequency: 1.5, delayTime: 3.5, depth: 0.7, wet: 0}).connect(delay);
   masterGain = new Tone.Gain(0.8).connect(chorus);
+  analyser = Tone.context.createAnalyser();
+  masterGain.connect(analyser);
 }
 
 async function initMIDI() {
   const status = document.getElementById('midi-status');
-  if(!navigator.requestMIDIAccess) {
-    status.textContent = '❌ Browser tidak support MIDI';
-    return;
-  }
+  if(!navigator.requestMIDIAccess) {status.textContent = '❌ No MIDI'; return;}
   try {
     midiAccess = await navigator.requestMIDIAccess();
     const inputs = midiAccess.inputs.values();
@@ -169,10 +217,10 @@ async function initMIDI() {
       status.textContent = `✅ MIDI: ${input.name}`;
       found = true;
     }
-    if(!found) status.textContent = '⚠️ MIDI ready. Colok keyboard USB';
+    if(!found) status.textContent = '⚠️ MIDI ready';
     midiAccess.onstatechange = initMIDI;
   } catch(e) {
-    status.textContent = '❌ MIDI Error: ' + e.message;
+    status.textContent = '❌ MIDI Error';
   }
 }
 
@@ -186,11 +234,6 @@ function handleMIDIMessage(msg) {
   } else if(type === 0x80 || (type === 0x90 && vel === 0)) {
     synth.noteOff(0, note);
     highlightKey(note, false);
-  } else if(type === 0xB0) {
-    if(note === 1) synth.controllerChange(0, 1, vel);
-  } else if(type === 0xE0) {
-    const bend = ((vel << 7) | note) - 8192;
-    synth.pitchBend(0, bend);
   }
 }
 
@@ -268,36 +311,28 @@ function toggleSeqStep(track, step) {
 
 function updateBPM(val) {
   seqBPM = parseInt(val);
-  if(seqPlaying) {
-    toggleSeqPlay();
-    toggleSeqPlay();
-  }
+  if(seqPlaying) {toggleSeqPlay(); toggleSeqPlay();}
 }
 
 async function loadSF2FromURL() {
   const url = document.getElementById('sf2-url').value.trim();
   const status = document.getElementById('sf2-status');
   if(!url.includes('.sf2')) {
-    status.textContent = '❌ URL harus.sf2';
-    status.style.color = '#FF3B30';
+    status.textContent = '❌ Need .sf2 file';
     return;
   }
-  const sizeHint = url.includes('Piano.sf2')? '~1GB' : url.includes('FluidR3')? '~148MB' : '~30MB';
-  status.textContent = `⏳ Downloading SF2 ${sizeHint}... Sabar`;
-  status.style.color = 'var(--neon-secondary)';
+  status.textContent = `⏳ Loading...`;
   try {
     if(!synth) synth = new WebAudioTinySynth({quality:1, useReverb:1});
     await synth.loadSoundFont(url);
     localStorage.setItem('nexus_sf2_url', url);
-    status.textContent = `✅ Loaded: ${url.split('/').pop()}`;
-    status.style.color = 'var(--neon-accent)';
+    status.textContent = `✅ Loaded!`;
     document.getElementById('instrument-select').disabled = false;
     document.getElementById('mode-toggle').disabled = false;
     initMIDI();
     initFX();
   } catch(err) {
-    status.textContent = '❌ Error: ' + err.message + ' | Coba GeneralUser dulu';
-    status.style.color = '#FF3B30';
+    status.textContent = '❌ Error: ' + err.message;
   }
 }
 
@@ -310,10 +345,7 @@ function changeInstrument() {
 }
 
 function playNote(midiNote, vel = currentVelocity, channel = 0) {
-  if(!synth) {
-    document.getElementById('sf2-status').textContent = '⚠️ Klik LOAD SF2 dulu';
-    return;
-  }
+  if(!synth) return;
   synth.noteOn(channel, midiNote, vel);
   setTimeout(() => synth.noteOff(channel, midiNote), 400);
 }
@@ -327,13 +359,11 @@ function updatePitchBend(val) {
   if(!synth) return;
   const bend = Math.round((val - 64) * 128);
   synth.pitchBend(0, bend);
-  document.getElementById('pb-label').textContent = `PB: ${val}`;
 }
 
 function updateModWheel(val) {
   if(!synth) return;
   synth.controllerChange(0, 1, parseInt(val));
-  document.getElementById('mod-label').textContent = `MOD: ${val}`;
 }
 
 function toggleMode() {
@@ -341,7 +371,7 @@ function toggleMode() {
   const btn = document.getElementById('mode-toggle');
   const kbdArea = document.getElementById('keyboard-area');
   if(drumMode) {
-    btn.textContent = '🎹 SWITCH TO KEYS';
+    btn.textContent = '🎹 KEYS';
     btn.classList.add('active');
     document.getElementById('instrument-select').value = '128';
     changeInstrument();
@@ -349,18 +379,128 @@ function toggleMode() {
       `<div class="pad" onclick="playNote(${d.note},100,9)" data-midi="${d.note}">${d.name}</div>`
     ).join('')}</div>`;
   } else {
-    btn.textContent = '🥁 SWITCH TO DRUM PAD';
+    btn.textContent = '🥁 DRUMS';
     btn.classList.remove('active');
-    kbdArea.innerHTML = `
-      <div class="kbd">
-        ${[60,61,62,63,64,65,66,67,68,69,70,71,72,74].map((n,i) => 
-          `<div class="key ${[1,3,6,8,10].includes(i)?'black':''}" onclick="playNote(${n})" data-midi="${n}"></div>`
-        ).join('')}
-      </div>
-    `;
+    kbdArea.innerHTML = `<div class="kbd">${[60,61,62,63,64,65,66,67,68,69,70,71,72,74].map((n,i) => 
+      `<div class="key ${[1,3,6,8,10].includes(i)?'black':''} ${scaleLockActive && !isNoteInScale(n)?'disabled':''}" onclick="${scaleLockActive && !isNoteInScale(n)?'':'playNote('+n+')'}" data-midi="${n}"></div>`
+    ).join('')}</div>`;
   }
 }
 
+// ARPEGGIATOR
+function toggleArpeggiator() {
+  arpActive =!arpActive;
+  const btn = document.getElementById('arp-toggle');
+  if(arpActive) {
+    btn.classList.add('active');
+    startArpeggiator();
+  } else {
+    btn.classList.remove('active');
+    if(arpInterval) clearInterval(arpInterval);
+  }
+}
+
+function startArpeggiator() {
+  if(arpNotes.length === 0) return;
+  const interval = (60000 / seqBPM / (arpSpeed / 100)) / 4;
+  arpIndex = 0;
+  arpInterval = setInterval(() => {
+    if(!arpActive) return;
+    let note;
+    if(arpMode === 'up') note = arpNotes[arpIndex % arpNotes.length];
+    else if(arpMode === 'down') note = arpNotes[arpNotes.length - 1 - (arpIndex % arpNotes.length)];
+    else if(arpMode === 'updown') {
+      const cycle = arpNotes.length * 2 - 2;
+      const pos = arpIndex % cycle;
+      note = pos < arpNotes.length? arpNotes[pos] : arpNotes[cycle - pos];
+    } else note = arpNotes[Math.floor(Math.random() * arpNotes.length)];
+    
+    const octaveNote = note + (12 * arpOctave);
+    playNote(octaveNote, 100);
+    arpIndex++;
+  }, interval);
+}
+
+function addArpNote(midiNote) {
+  if(!arpNotes.includes(midiNote)) arpNotes.push(midiNote);
+  renderArpDisplay();
+  if(arpActive) startArpeggiator();
+}
+
+function renderArpDisplay() {
+  const display = document.getElementById('arp-display');
+  if(display) display.textContent = `Notes: ${arpNotes.join(', ')}`;
+}
+
+// SCALE LOCK
+function isNoteInScale(midiNote) {
+  const scalePattern = SCALES[scaleType];
+  const noteInOctave = midiNote % 12;
+  return scalePattern.includes(noteInOctave);
+}
+
+function toggleScaleLock() {
+  scaleLockActive =!scaleLockActive;
+  const btn = document.getElementById('scale-toggle');
+  btn.classList.toggle('active');
+  updateKeyboardDisplay();
+}
+
+function updateKeyboardDisplay() {
+  if(drumMode) return;
+  const kbdArea = document.getElementById('keyboard-area');
+  kbdArea.querySelectorAll('.key').forEach(key => {
+    const midi = parseInt(key.dataset.midi);
+    if(scaleLockActive && !isNoteInScale(midi)) {
+      key.classList.add('disabled');
+      key.onclick = null;
+    } else {
+      key.classList.remove('disabled');
+      key.onclick = () => playNote(midi);
+    }
+  });
+}
+
+// ADSR ENVELOPE
+function updateADSR() {
+  const display = document.getElementById('adsr-display');
+  if(display) {
+    const ctx = display.getContext('2d');
+    ctx.fillStyle = 'var(--bg-deep)';
+    ctx.fillRect(0, 0, display.width, display.height);
+    ctx.strokeStyle = 'var(--neon-primary)';
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    
+    const w = display.width;
+    const h = display.height;
+    const totalTime = (adsrAttack + adsrDecay + 1 + adsrRelease) * 100;
+    
+    ctx.moveTo(0, h);
+    ctx.lineTo((adsrAttack / totalTime) * w, h * (1 - 1));
+    ctx.lineTo((adsrAttack + adsrDecay) / totalTime * w, h * (1 - adsrSustain));
+    ctx.lineTo(((adsrAttack + adsrDecay + 1) / totalTime) * w, h * (1 - adsrSustain));
+    ctx.lineTo(w, h);
+    ctx.stroke();
+  }
+}
+
+// LFO MODULATOR
+function updateLFOPhase() {
+  lfoPhase += (lfoFreq / 100);
+  if(lfoPhase > Math.PI * 2) lfoPhase = 0;
+  
+  let lfoValue = 0;
+  if(lfoWaveform === 'sine') lfoValue = Math.sin(lfoPhase);
+  else if(lfoWaveform === 'square') lfoValue = lfoPhase < Math.PI? 1 : -1;
+  else if(lfoWaveform === 'saw') lfoValue = (lfoPhase / (Math.PI * 2)) * 2 - 1;
+  
+  if(lfoTarget === 'volume' && masterGain) {
+    masterGain.gain.value = 0.8 * (1 + lfoValue * lfoDepth);
+  }
+}
+
+// FX CONTROLS
 function updateReverb(val) {
   if(reverb) reverb.wet.value = val / 100;
 }
@@ -371,6 +511,7 @@ function updateChorus(val) {
   if(chorus) chorus.wet.value = val / 100;
 }
 
+// MIXER CONTROLS
 function updateMixVol(ch, val) {
   if(mixerChannels[ch]) mixerChannels[ch].volume.value = Tone.gainToDb(val / 100);
 }
@@ -378,66 +519,181 @@ function toggleMixMute(ch) {
   if(mixerChannels[ch]) mixerChannels[ch].mute =!mixerChannels[ch].mute;
 }
 
-async function loadSample(e, padIdx) {
-  const file = e.target.files[0];
-  if(!file) return;
-  const buffer = await file.arrayBuffer();
-  chopSamples[padIdx] = await Tone.context.decodeAudioData(buffer);
-  document.querySelectorAll('.chop-pad')[padIdx].classList.add('loaded');
-}
-function playChop(padIdx) {
-  if(!chopSamples[padIdx]) return;
-  const player = new Tone.Player(chopSamples[padIdx]).connect(masterGain);
-  player.start();
+// EQ CONTROLS
+function updateEQ(ch, band, val) {
+  // Simplified EQ - would need Tone.Filter chain in production
+  console.log(`CH${ch} ${band}:${val}`);
 }
 
-function openDecentSampler() {
+// SPECTRUM
+function drawSpectrum() {
+  if(!analyser) return;
+  const canvas = document.getElementById('spectrum-canvas');
+  if(!canvas) return;
+  
+  const ctx = canvas.getContext('2d');
+  const dataArray = new Uint8Array(analyser.frequencyBinCount);
+  analyser.getByteFrequencyData(dataArray);
+  
+  ctx.fillStyle = 'var(--bg-deep)';
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+  
+  const barWidth = (canvas.width / dataArray.length) * 2.5;
+  let x = 0;
+  
+  for(let i = 0; i < dataArray.length; i++) {
+    const barHeight = (dataArray[i] / 255) * canvas.height;
+    const hue = (i / dataArray.length) * 360;
+    ctx.fillStyle = `hsl(${hue}, 100%, 50%)`;
+    ctx.fillRect(x, canvas.height - barHeight, barWidth, barHeight);
+    x += barWidth + 1;
+  }
+  
+  requestAnimationFrame(drawSpectrum);
+}
+
+// PIANO ROLL
+function openPianoRoll() {
   const win = document.createElement('div');
   win.className = 'window';
   win.style.left = '40px';
-  win.style.top = '40px';
-  win.style.width = '480px';
-  win.style.height = '600px';
+  win.style.top = '400px';
+  win.style.width = '600px';
+  win.style.height = '300px';
   win.style.zIndex = ++windowZ;
-  const savedURL = localStorage.getItem('nexus_sf2_url') || SF2_PRESETS[0].url;
-  let instOptions = GM_INSTRUMENTS.map(i => `<option value="${i.split(':')[0]}">${i}</option>`).join('');
-  let sf2Options = SF2_PRESETS.map(s => `<option value="${s.url}">${s.name}</option>`).join('');
   win.innerHTML = `
     <div class="window-header">
-      <div class="window-title">DECENT SAMPLER - OMNIVERSE MODE</div>
+      <div class="window-title">🎼 PIANO ROLL</div>
       <div class="window-controls">
         <button class="win-btn" onclick="this.closest('.window').remove()">✕</button>
       </div>
     </div>
     <div class="window-body">
-      <div id="midi-status" class="midi-status">🎹 MIDI: Not connected</div>
+      <div class="transport">
+        <button class="transport-btn" onclick="addNote()">+ NOTE</button>
+        <button class="transport-btn" onclick="clearNotes()">CLEAR</button>
+        <button class="transport-btn play" onclick="playPRNotes()">▶</button>
+      </div>
+      <div class="pianoroll">
+        <div class="pr-grid"></div>
+        <div id="pr-notes"></div>
+      </div>
+    </div>
+  `;
+  workspace.appendChild(win);
+  makeDraggable(win);
+}
+
+function addNote() {prNotes.push({midi: 60, start: 0, duration: 1}); renderPRNotes();}
+function clearNotes() {prNotes = []; renderPRNotes();}
+function renderPRNotes() {
+  const c = document.getElementById('pr-notes');
+  if(!c) return;
+  c.innerHTML = prNotes.map((n,i) => `<div class="pr-note" style="left:${n.start*40}px;top:${(127-n.midi)*20}px;width:${n.duration*40}px" onclick="prNotes.splice(${i},1);renderPRNotes()">●</div>`).join('');
+}
+function playPRNotes() {
+  if(!synth) return;
+  prNotes.forEach(n => {
+    setTimeout(() => {
+      synth.noteOn(0, n.midi, 100);
+      setTimeout(() => synth.noteOff(0, n.midi), n.duration * 500);
+    }, n.start * 500);
+  });
+}
+
+// SAVE/LOAD PROJECT
+function saveProject() {
+  const project = {
+    name: projectName,
+    prNotes,
+    seqPattern,
+    seqBPM,
+    arpMode,
+    arpSpeed,
+    adsrAttack,
+    adsrDecay,
+    adsrSustain,
+    adsrRelease,
+    scaleType,
+    scaleLockActive
+  };
+  localStorage.setItem('nexus_project_' + projectName, JSON.stringify(project));
+  alert('✅ Project saved: ' + projectName);
+}
+
+function loadProject() {
+  const name = prompt('Project name?', projectName);
+  if(!name) return;
+  const data = localStorage.getItem('nexus_project_' + name);
+  if(!data) {alert('❌ Not found'); return;}
+  
+  const project = JSON.parse(data);
+  projectName = project.name;
+  prNotes = project.prNotes || [];
+  seqPattern = project.seqPattern || {kick: Array(16).fill(0), snare: Array(16).fill(0), hihat: Array(16).fill(0), note: Array(16).fill(0)};
+  seqBPM = project.seqBPM || 120;
+  arpMode = project.arpMode || 'up';
+  arpSpeed = project.arpSpeed || 100;
+  adsrAttack = project.adsrAttack || 0.1;
+  adsrDecay = project.adsrDecay || 0.2;
+  adsrSustain = project.adsrSustain || 0.7;
+  adsrRelease = project.adsrRelease || 0.3;
+  scaleType = project.scaleType || 'major';
+  scaleLockActive = project.scaleLockActive || false;
+  
+  alert('✅ Project loaded: ' + name);
+  updateADSR();
+}
+
+// WINDOW CREATORS
+function openDecentSampler() {
+  const win = document.createElement('div');
+  win.className = 'window';
+  win.style.left = '40px';
+  win.style.top = '40px';
+  win.style.width = '420px';
+  win.style.height = '650px';
+  win.style.zIndex = ++windowZ;
+  
+  const savedURL = localStorage.getItem('nexus_sf2_url') || SF2_PRESETS[0].url;
+  let instOptions = GM_INSTRUMENTS.map(i => `<option value="${i.split(':')[0]}">${i}</option>`).join('');
+  let sf2Options = SF2_PRESETS.map(s => `<option value="${s.url}">${s.name}</option>`).join('');
+  
+  win.innerHTML = `
+    <div class="window-header">
+      <div class="window-title">🎹 DECENT SAMPLER</div>
+      <div class="window-controls">
+        <button class="win-btn" onclick="this.closest('.window').remove()">✕</button>
+      </div>
+    </div>
+    <div class="window-body">
+      <div id="midi-status" class="midi-status">🎹 MIDI: Waiting...</div>
       <select id="sf2-preset" class="instrument-select" onchange="document.getElementById('sf2-url').value=this.value">
         ${sf2Options}
       </select>
       <input id="sf2-url" class="sf2-input" value="${savedURL}">
-      <button class="sf2-btn" onclick="loadSF2FromURL()">⚡ LOAD SF2 FROM URL</button>
-      <div id="sf2-status" class="sf2-status">Ready. Pilih Salamander 1GB atau GeneralUser 30MB</div>
+      <button class="sf2-btn" onclick="loadSF2FromURL()">⚡ LOAD SF2</button>
+      <div id="sf2-status" class="sf2-status">Ready</div>
       <select id="instrument-select" class="instrument-select" onchange="changeInstrument()" disabled>
         ${instOptions}
       </select>
-      <button id="mode-toggle" class="mode-toggle" onclick="toggleMode()" disabled>🥁 SWITCH TO DRUM PAD</button>
+      <button id="mode-toggle" class="mode-toggle" onclick="toggleMode()" disabled>🥁 DRUMS</button>
+      
       <div class="controls-row">
         <div class="ctrl-group">
           <span id="vel-label" class="ctrl-label">VEL: 100</span>
           <input type="range" min="1" max="127" value="100" class="ctrl-slider" oninput="updateVelocity(this.value)">
         </div>
         <div class="ctrl-group">
-          <span id="pb-label" class="ctrl-label">PB: 64</span>
+          <span class="ctrl-label">PB</span>
           <input type="range" min="0" max="127" value="64" class="ctrl-slider" oninput="updatePitchBend(this.value)" onmouseup="this.value=64;updatePitchBend(64)">
         </div>
-        <div class="ctrl-group">
-          <span id="mod-label" class="ctrl-label">MOD: 0</span>
-          <input type="range" min="0" max="127" value="0" class="ctrl-slider" oninput="updateModWheel(this.value)">
-        </div>
       </div>
+      
       <div class="transport">
         <button id="rec-btn" class="transport-btn rec" onclick="toggleRecord()">● REC</button>
       </div>
+      
       <div id="keyboard-area">
         <div class="kbd">
           ${[60,61,62,63,64,65,66,67,68,69,70,71,72,74].map((n,i) => 
@@ -447,6 +703,7 @@ function openDecentSampler() {
       </div>
     </div>
   `;
+  
   workspace.appendChild(win);
   makeDraggable(win);
 }
@@ -454,14 +711,15 @@ function openDecentSampler() {
 function openSequencer() {
   const win = document.createElement('div');
   win.className = 'window';
-  win.style.left = '540px';
+  win.style.left = '480px';
   win.style.top = '40px';
-  win.style.width = '500px';
-  win.style.height = '350px';
+  win.style.width = '450px';
+  win.style.height = '300px';
   win.style.zIndex = ++windowZ;
+  
   win.innerHTML = `
     <div class="window-header">
-      <div class="window-title">16-STEP SEQUENCER - 808 STYLE</div>
+      <div class="window-title">🎛️ 16-STEP SEQUENCER</div>
       <div class="window-controls">
         <button class="win-btn" onclick="this.closest('.window').remove()">✕</button>
       </div>
@@ -470,7 +728,7 @@ function openSequencer() {
       <div class="transport">
         <button id="seq-play-btn" class="transport-btn play" onclick="toggleSeqPlay()">▶ PLAY</button>
         <input type="number" class="bpm-input" value="120" min="40" max="240" onchange="updateBPM(this.value)">
-        <span style="color:var(--text-dim);font-size:10px;align-self:center">BPM</span>
+        <span style="color:var(--text-dim);font-size:10px">BPM</span>
       </div>
       <div class="sequencer">
         ${['KICK','SNARE','HIHAT','NOTE'].map(track => `
@@ -484,81 +742,173 @@ function openSequencer() {
       </div>
     </div>
   `;
+  
   workspace.appendChild(win);
   makeDraggable(win);
 }
 
-function openPianoRoll() {
+function openArpeggiator() {
   const win = document.createElement('div');
   win.className = 'window';
-  win.style.left = '40px';
-  win.style.top = '400px';
-  win.style.width = '600px';
-  win.style.height = '300px';
+  win.style.left = '950px';
+  win.style.top = '40px';
+  win.style.width = '350px';
   win.style.zIndex = ++windowZ;
+  
   win.innerHTML = `
     <div class="window-header">
-      <div class="window-title">PIANO ROLL EDITOR - FL STYLE</div>
+      <div class="window-title">🎵 ARPEGGIATOR</div>
       <div class="window-controls">
         <button class="win-btn" onclick="this.closest('.window').remove()">✕</button>
       </div>
     </div>
     <div class="window-body">
-      <div class="transport">
-        <button class="transport-btn" onclick="addNote()">+ ADD NOTE</button>
-        <button class="transport-btn" onclick="clearNotes()">CLEAR</button>
-        <button class="transport-btn play" onclick="playPRNotes()">▶ PLAY</button>
+      <button id="arp-toggle" class="transport-btn play" onclick="toggleArpeggiator()" style="width:100%;margin-bottom:8px">▶ ARP</button>
+      
+      <div class="row-label">MODE</div>
+      <div style="display:flex;gap:4px;margin-bottom:8px;flex-wrap:wrap">
+        <button class="btn-small active" onclick="arpMode='up';this.parentElement.querySelectorAll('button').forEach(b=>b.classList.remove('active'));this.classList.add('active')">UP</button>
+        <button class="btn-small" onclick="arpMode='down';this.parentElement.querySelectorAll('button').forEach(b=>b.classList.remove('active'));this.classList.add('active')">DOWN</button>
+        <button class="btn-small" onclick="arpMode='updown';this.parentElement.querySelectorAll('button').forEach(b=>b.classList.remove('active'));this.classList.add('active')">UpDown</button>
+        <button class="btn-small" onclick="arpMode='random';this.parentElement.querySelectorAll('button').forEach(b=>b.classList.remove('active'));this.classList.add('active')">RANDOM</button>
       </div>
-      <div class="pianoroll">
-        <div class="pr-grid"></div>
-        <div id="pr-notes"></div>
+      
+      <div class="fx-row">
+        <div class="fx-label">SPEED</div>
+        <input type="range" min="25" max="200" value="100" class="fx-knob" oninput="arpSpeed=this.value">
       </div>
+      
+      <div class="fx-row">
+        <div class="fx-label">OCTAVE</div>
+        <input type="range" min="0" max="3" value="1" class="fx-knob" oninput="arpOctave=parseInt(this.value)">
+      </div>
+      
+      <div class="row-label">NOTES</div>
+      <div id="arp-display" style="background:var(--bg-deep);border:1px solid var(--border-hardware);padding:8px;font-size:8px;margin-bottom:8px;min-height:40px">No notes</div>
+      
+      <button class="btn-small" style="width:100%" onclick="arpNotes=[];renderArpDisplay()">CLEAR NOTES</button>
     </div>
   `;
+  
   workspace.appendChild(win);
   makeDraggable(win);
 }
 
-function addNote() {
-  const note = {midi: 60, start: 0, duration: 1};
-  prNotes.push(note);
-  renderPRNotes();
+function openADSR() {
+  const win = document.createElement('div');
+  win.className = 'window';
+  win.style.left = '1320px';
+  win.style.top = '40px';
+  win.style.width = '320px';
+  win.style.zIndex = ++windowZ;
+  
+  win.innerHTML = `
+    <div class="window-header">
+      <div class="window-title">📈 ADSR ENVELOPE</div>
+      <div class="window-controls">
+        <button class="win-btn" onclick="this.closest('.window').remove()">✕</button>
+      </div>
+    </div>
+    <div class="window-body">
+      <canvas id="adsr-display" class="envelope-display"></canvas>
+      
+      <div class="fx-row">
+        <div class="fx-label">ATTACK</div>
+        <input type="range" min="0" max="3" step="0.1" value="0.1" class="fx-knob" oninput="adsrAttack=parseFloat(this.value);updateADSR()">
+        <span style="font-size:8px;color:var(--neon-accent);width:30px;text-align:right">${(0.1).toFixed(2)}</span>
+      </div>
+      
+      <div class="fx-row">
+        <div class="fx-label">DECAY</div>
+        <input type="range" min="0" max="2" step="0.1" value="0.2" class="fx-knob" oninput="adsrDecay=parseFloat(this.value);updateADSR()">
+        <span style="font-size:8px;color:var(--neon-accent);width:30px;text-align:right">${(0.2).toFixed(2)}</span>
+      </div>
+      
+      <div class="fx-row">
+        <div class="fx-label">SUSTAIN</div>
+        <input type="range" min="0" max="1" step="0.1" value="0.7" class="fx-knob" oninput="adsrSustain=parseFloat(this.value);updateADSR()">
+        <span style="font-size:8px;color:var(--neon-accent);width:30px;text-align:right">${(0.7).toFixed(2)}</span>
+      </div>
+      
+      <div class="fx-row">
+        <div class="fx-label">RELEASE</div>
+        <input type="range" min="0" max="3" step="0.1" value="0.3" class="fx-knob" oninput="adsrRelease=parseFloat(this.value);updateADSR()">
+        <span style="font-size:8px;color:var(--neon-accent);width:30px;text-align:right">${(0.3).toFixed(2)}</span>
+      </div>
+    </div>
+  `;
+  
+  workspace.appendChild(win);
+  makeDraggable(win);
+  
+  setTimeout(() => updateADSR(), 100);
 }
-function clearNotes() {
-  prNotes = [];
-  renderPRNotes();
-}
-function renderPRNotes() {
-  const container = document.getElementById('pr-notes');
-  if(!container) return;
-  container.innerHTML = prNotes.map((n,i) => 
-    `<div class="pr-note" style="left:${n.start*40}px;top:${(127-n.midi)*20}px;width:${n.duration*40}px" onclick="delNote(${i})">C4</div>`
-  ).join('');
-}
-function delNote(i) {
-  prNotes.splice(i,1);
-  renderPRNotes();
-}
-function playPRNotes() {
-  if(!synth) return;
-  prNotes.forEach(n => {
-    setTimeout(() => {
-      synth.noteOn(0, n.midi, 100);
-      setTimeout(() => synth.noteOff(0, n.midi), n.duration * 500);
-    }, n.start * 500);
-  });
+
+function openScaleLock() {
+  const win = document.createElement('div');
+  win.className = 'window';
+  win.style.left = '40px';
+  win.style.top = '400px';
+  win.style.width = '320px';
+  win.style.zIndex = ++windowZ;
+  
+  win.innerHTML = `
+    <div class="window-header">
+      <div class="window-title">🎹 SCALE LOCK</div>
+      <div class="window-controls">
+        <button class="win-btn" onclick="this.closest('.window').remove()">✕</button>
+      </div>
+    </div>
+    <div class="window-body">
+      <button id="scale-toggle" class="transport-btn play" onclick="toggleScaleLock()" style="width:100%;margin-bottom:8px">🔒 LOCK</button>
+      
+      <div class="row-label">SCALE TYPE</div>
+      <select class="ctrl-select" onchange="scaleType=this.value;updateKeyboardDisplay()">
+        <option value="major">Major</option>
+        <option value="minor">Minor</option>
+        <option value="pentatonic_major">Pentatonic Major</option>
+        <option value="pentatonic_minor">Pentatonic Minor</option>
+        <option value="blues">Blues</option>
+        <option value="dorian">Dorian</option>
+      </select>
+      
+      <div class="row-label">ROOT NOTE</div>
+      <select class="ctrl-select" onchange="scaleRoot=parseInt(this.value)">
+        <option value="60">C</option>
+        <option value="61">C#</option>
+        <option value="62">D</option>
+        <option value="63">D#</option>
+        <option value="64">E</option>
+        <option value="65">F</option>
+        <option value="66">F#</option>
+        <option value="67">G</option>
+        <option value="68">G#</option>
+        <option value="69">A</option>
+        <option value="70">A#</option>
+        <option value="71">B</option>
+      </select>
+      
+      <div style="background:var(--bg-deep);border:1px solid var(--border-hardware);padding:8px;margin-top:8px;font-size:8px;color:var(--neon-accent)">
+        <strong>Status:</strong> ${scaleLockActive?'🔒 LOCKED':'🔓 UNLOCKED'}
+      </div>
+    </div>
+  `;
+  
+  workspace.appendChild(win);
+  makeDraggable(win);
 }
 
 function openFXRack() {
   const win = document.createElement('div');
   win.className = 'window';
-  win.style.left = '540px';
+  win.style.left = '380px';
   win.style.top = '400px';
-  win.style.width = '400px';
+  win.style.width = '320px';
   win.style.zIndex = ++windowZ;
+  
   win.innerHTML = `
     <div class="window-header">
-      <div class="window-title">FX RACK - REVERB/DELAY/CHORUS</div>
+      <div class="window-title">🎚️ FX RACK</div>
       <div class="window-controls">
         <button class="win-btn" onclick="this.closest('.window').remove()">✕</button>
       </div>
@@ -578,20 +928,22 @@ function openFXRack() {
       </div>
     </div>
   `;
+  
   workspace.appendChild(win);
   makeDraggable(win);
 }
 
-function openMixer() {
+function openMixerEQ() {
   const win = document.createElement('div');
   win.className = 'window';
-  win.style.left = '40px';
-  win.style.top = '720px';
-  win.style.width = '500px';
+  win.style.left = '720px';
+  win.style.top = '400px';
+  win.style.width = '450px';
   win.style.zIndex = ++windowZ;
+  
   win.innerHTML = `
     <div class="window-header">
-      <div class="window-title">8-CHANNEL MIXER</div>
+      <div class="window-title">📊 MIXER + EQ</div>
       <div class="window-controls">
         <button class="win-btn" onclick="this.closest('.window').remove()">✕</button>
       </div>
@@ -606,39 +958,145 @@ function openMixer() {
         </div>
         `).join('')}
       </div>
+      
+      <div style="border-top:1px solid var(--border-hardware);margin-top:8px;padding-top:8px">
+        <div class="row-label">CHANNEL EQ</div>
+        <div class="fx-row">
+          <div class="fx-label">BASS</div>
+          <input type="range" min="-12" max="12" value="0" class="fx-knob" oninput="updateEQ(0,'bass',this.value)">
+        </div>
+        <div class="fx-row">
+          <div class="fx-label">MID</div>
+          <input type="range" min="-12" max="12" value="0" class="fx-knob" oninput="updateEQ(0,'mid',this.value)">
+        </div>
+        <div class="fx-row">
+          <div class="fx-label">HIGH</div>
+          <input type="range" min="-12" max="12" value="0" class="fx-knob" oninput="updateEQ(0,'high',this.value)">
+        </div>
+      </div>
     </div>
   `;
+  
   workspace.appendChild(win);
   makeDraggable(win);
 }
 
-function openChopper() {
+function openLFO() {
   const win = document.createElement('div');
   win.className = 'window';
-  win.style.left = '540px';
-  win.style.top = '720px';
-  win.style.width = '400px';
+  win.style.left = '1200px';
+  win.style.top = '400px';
+  win.style.width = '320px';
   win.style.zIndex = ++windowZ;
+  
   win.innerHTML = `
     <div class="window-header">
-      <div class="window-title">SAMPLE CHOPPER - 16 PADS</div>
+      <div class="window-title">〰️ LFO MODULATOR</div>
       <div class="window-controls">
         <button class="win-btn" onclick="this.closest('.window').remove()">✕</button>
       </div>
     </div>
     <div class="window-body">
-      <div class="chop-grid">
-        ${Array(16).fill(0).map((_, i) => `
-        <div class="chop-pad" onclick="playChop(${i})">
-          <input type="file" accept="audio/*" style="display:none" onchange="loadSample(event,${i})">
-          <label style="cursor:pointer;width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:8px">PAD ${i+1}</label>
-        </div>
-        `).join('')}
+      <button class="transport-btn play" onclick="lfoActive=!lfoActive;this.classList.toggle('active')" style="width:100%;margin-bottom:8px">LFO ${lfoActive?'ON':'OFF'}</button>
+      
+      <div class="row-label">WAVEFORM</div>
+      <div style="display:flex;gap:4px;margin-bottom:8px">
+        <button class="btn-small active" onclick="lfoWaveform='sine';this.parentElement.querySelectorAll('button').forEach(b=>b.classList.remove('active'));this.classList.add('active')">SINE</button>
+        <button class="btn-small" onclick="lfoWaveform='square';this.parentElement.querySelectorAll('button').forEach(b=>b.classList.remove('active'));this.classList.add('active')">SQUARE</button>
+        <button class="btn-small" onclick="lfoWaveform='saw';this.parentElement.querySelectorAll('button').forEach(b=>b.classList.remove('active'));this.classList.add('active')">SAW</button>
+      </div>
+      
+      <div class="fx-row">
+        <div class="fx-label">FREQ</div>
+        <input type="range" min="0.5" max="20" step="0.5" value="5" class="fx-knob" oninput="lfoFreq=parseFloat(this.value)">
+      </div>
+      
+      <div class="fx-row">
+        <div class="fx-label">DEPTH</div>
+        <input type="range" min="0" max="1" step="0.1" value="0.3" class="fx-knob" oninput="lfoDepth=parseFloat(this.value)">
+      </div>
+      
+      <div class="row-label">TARGET</div>
+      <select class="ctrl-select" onchange="lfoTarget=this.value">
+        <option value="volume">Volume</option>
+        <option value="pitch">Pitch</option>
+        <option value="filter">Filter</option>
+      </select>
+      
+      <script>setInterval(updateLFOPhase, 50);</script>
+    </div>
+  `;
+  
+  workspace.appendChild(win);
+  makeDraggable(win);
+}
+
+function openSpectrum() {
+  const win = document.createElement('div');
+  win.className = 'window';
+  win.style.left = '1550px';
+  win.style.top = '40px';
+  win.style.width = '350px';
+  win.style.height = '400px';
+  win.style.zIndex = ++windowZ;
+  
+  win.innerHTML = `
+    <div class="window-header">
+      <div class="window-title">📉 SPECTRUM</div>
+      <div class="window-controls">
+        <button class="win-btn" onclick="this.closest('.window').remove()">✕</button>
+      </div>
+    </div>
+    <div class="window-body">
+      <canvas id="spectrum-canvas" class="spectrum-canvas"></canvas>
+    </div>
+  `;
+  
+  workspace.appendChild(win);
+  makeDraggable(win);
+  
+  setTimeout(drawSpectrum, 100);
+}
+
+function openSaveLoad() {
+  const win = document.createElement('div');
+  win.className = 'window';
+  win.style.left = '40px';
+  win.style.top = '750px';
+  win.style.width = '350px';
+  win.style.zIndex = ++windowZ;
+  
+  win.innerHTML = `
+    <div class="window-header">
+      <div class="window-title">💾 SAVE/LOAD PROJECT</div>
+      <div class="window-controls">
+        <button class="win-btn" onclick="this.closest('.window').remove()">✕</button>
+      </div>
+    </div>
+    <div class="window-body">
+      <input type="text" value="${projectName}" class="sf2-input" oninput="projectName=this.value" placeholder="Project name">
+      <button class="save-btn" onclick="saveProject()">💾 SAVE</button>
+      <button class="load-btn" onclick="loadProject()">📂 LOAD</button>
+      
+      <div style="background:var(--bg-deep);border:1px solid var(--border-hardware);padding:8px;margin-top:8px;font-size:8px;color:var(--text-dim);max-height:200px;overflow-y:auto">
+        <strong>Saved Projects:</strong>
+        <div id="project-list" style="margin-top:8px"></div>
       </div>
     </div>
   `;
+  
   workspace.appendChild(win);
   makeDraggable(win);
+  
+  // List saved projects
+  const list = document.getElementById('project-list');
+  for(let i = 0; i < localStorage.length; i++) {
+    const key = localStorage.key(i);
+    if(key.startsWith('nexus_project_')) {
+      const name = key.replace('nexus_project_', '');
+      list.innerHTML += `<div style="padding:4px;border-bottom:1px solid var(--border-hardware)">${name}</div>`;
+    }
+  }
 }
 
 function makeDraggable(win) {
