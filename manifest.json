@@ -1,18 +1,98 @@
 {
-  "name": "NEXUS DAW v37 Ultimate",
+  "name": "NEXUS DAW v39 MAESTRO ULTIMATE",
   "short_name": "NEXUS DAW",
-  "description": "Enterprise Modular Studio Control Console - 30 Windows + EMBER Theme",
+  "description": "Professional Modular Studio Control Console - 13 Windows + 10 Features + 3 Themes - Optimized for Desktop & Mobile",
   "start_url": "./",
+  "scope": "/",
   "display": "standalone",
   "background_color": "#030407",
   "theme_color": "#FF5A00",
-  "orientation": "landscape",
+  "orientation": "any",
+  "prefer_related_applications": false,
   "icons": [
     {
-      "src": "icon.svg",
-      "sizes": "any",
+      "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'><defs><linearGradient id='grad' x1='0%' y1='0%' x2='100%' y2='100%'><stop offset='0%' style='stop-color:%23FF5A00;stop-opacity:1' /><stop offset='100%' style='stop-color:%23FFB000;stop-opacity:1' /></linearGradient></defs><rect fill='%23030407' width='192' height='192'/><rect x='20' y='20' width='152' height='152' rx='20' fill='url(%23grad)'/><text x='96' y='120' font-size='80' font-weight='bold' fill='%23000' text-anchor='middle' font-family='monospace'>◆</text></svg>",
+      "sizes": "192x192",
       "type": "image/svg+xml",
       "purpose": "any maskable"
+    },
+    {
+      "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><defs><linearGradient id='grad2' x1='0%' y1='0%' x2='100%' y2='100%'><stop offset='0%' style='stop-color:%23FF5A00;stop-opacity:1' /><stop offset='100%' style='stop-color:%23FFB000;stop-opacity:1' /></linearGradient></defs><rect fill='%23030407' width='512' height='512'/><rect x='50' y='50' width='412' height='412' rx='60' fill='url(%23grad2)'/><text x='256' y='320' font-size='200' font-weight='bold' fill='%23000' text-anchor='middle' font-family='monospace'>◆</text></svg>",
+      "sizes": "512x512",
+      "type": "image/svg+xml",
+      "purpose": "any"
     }
-  ]
+  ],
+  "categories": ["music", "productivity", "entertainment"],
+  "screenshots": [
+    {
+      "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1280 720'><defs><pattern id='grid' width='40' height='40' patternUnits='userSpaceOnUse'><path d='M 40 0 L 0 0 0 40' fill='none' stroke='%232A2A2E' stroke-width='0.5'/></pattern></defs><rect fill='%23030407' width='1280' height='720'/><rect width='1280' height='720' fill='url(%23grid)'/><g transform='translate(100,50)'><rect width='300' height='150' fill='%23111215' stroke='%23FF5A00' stroke-width='2'/><text x='150' y='50' font-size='24' fill='%23FF5A00' text-anchor='middle' font-family='monospace' font-weight='bold'>SEQUENCER</text><circle cx='50' cy='100' r='20' fill='%23FF5A00'/><circle cx='100' cy='100' r='20' fill='%23111215' stroke='%23FF5A00' stroke-width='1'/><circle cx='150' cy='100' r='20' fill='%23111215' stroke='%23FF5A00' stroke-width='1'/></g><g transform='translate(450,50)'><rect width='300' height='150' fill='%23111215' stroke='%23FFB000' stroke-width='2'/><text x='150' y='50' font-size='24' fill='%23FFB000' text-anchor='middle' font-family='monospace' font-weight='bold'>MIXER</text><rect x='30' y='70' width='20' height='60' fill='%23FFB000'/><rect x='70' y='80' width='20' height='50' fill='%23FFB000'/><rect x='110' y='75' width='20' height='55' fill='%23FFB000'/></g><g transform='translate(800,50)'><rect width='300' height='150' fill='%23111215' stroke='%23FFE600' stroke-width='2'/><text x='150' y='50' font-size='24' fill='%23FFE600' text-anchor='middle' font-family='monospace' font-weight='bold'>FX RACK</text><text x='150' y='100' font-size='32' text-anchor='middle'>🎚️</text></g><text x='640' y='280' font-size='32' fill='%23FF5A00' text-anchor='middle' font-family='monospace' font-weight='bold'>NEXUS DAW v39 - DESKTOP VIEW</text><rect x='100' y='330' width='1080' height='330' fill='%23111215' stroke='%232A2A2E' stroke-width='2'/><text x='640' y='450' font-size='20' fill='%23FFB000' text-anchor='middle' font-family='monospace'>13 Windows • 10 Features • 3 Themes</text></svg>",
+      "sizes": "1280x720",
+      "type": "image/svg+xml",
+      "form_factor": "wide"
+    },
+    {
+      "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 540 720'><defs><rect id='phone' x='20' y='20' width='500' height='680' rx='40' fill='%23111215' stroke='%232A2A2E' stroke-width='2'/><linearGradient id='gradMob' x1='0%' y1='0%' x2='0%' y2='100%'><stop offset='0%' style='stop-color:%23FF5A00;stop-opacity:1' /><stop offset='100%' style='stop-color:%23030407;stop-opacity:1' /></linearGradient></defs><rect fill='%23030407' width='540' height='720'/><use href='%23phone'/><rect x='40' y='40' width='460' height='640' fill='%23030407'/><text x='270' y='100' font-size='28' fill='%23FF5A00' text-anchor='middle' font-family='monospace' font-weight='bold'>NEXUS DAW</text><g transform='translate(0,120)'><rect x='50' y='0' width='440' height='80' fill='%23111215' stroke='%23FF5A00' stroke-width='1' rx='4'/><text x='270' y='25' font-size='14' fill='%23FFB000' text-anchor='middle' font-family='monospace'>🎛️ SEQUENCER</text><text x='270' y='55' font-size='11' fill='%23999' text-anchor='middle' font-family='monospace'>16 Steps • 120 BPM</text></g><g transform='translate(0,220)'><rect x='50' y='0' width='440' height='80' fill='%23111215' stroke='%23FFB000' stroke-width='1' rx='4'/><text x='270' y='25' font-size='14' fill='%23FF5A00' text-anchor='middle' font-family='monospace'>📊 MIXER</text><text x='270' y='55' font-size='11' fill='%23999' text-anchor='middle' font-family='monospace'>8 Channels • Master</text></g><g transform='translate(0,320)'><rect x='50' y='0' width='440' height='80' fill='%23111215' stroke='%23FFE600' stroke-width='1' rx='4'/><text x='270' y='25' font-size='14' fill='%23FFB000' text-anchor='middle' font-family='monospace'>🎚️ FX RACK</text><text x='270' y='55' font-size='11' fill='%23999' text-anchor='middle' font-family='monospace'>Reverb • Delay • Chorus</text></g><g transform='translate(0,420)'><rect x='50' y='0' width='440' height='80' fill='%23111215' stroke='%23FF5A00' stroke-width='1' rx='4'/><text x='270' y='25' font-size='14' fill='%23FF5A00' text-anchor='middle' font-family='monospace'>🎹 KEYBOARD</text><text x='270' y='55' font-size='11' fill='%23999' text-anchor='middle' font-family='monospace'>Touch • MIDI • Velocity</text></g><g transform='translate(0,520)'><rect x='50' y='0' width='440' height='80' fill='%23111215' stroke='%23FFB000' stroke-width='1' rx='4'/><text x='270' y='25' font-size='14' fill='%23FFB000' text-anchor='middle' font-family='monospace'>💾 PROJECTS</text><text x='270' y='55' font-size='11' fill='%23999' text-anchor='middle' font-family='monospace'>Save • Load • Auto-save</text></g></svg>",
+      "sizes": "540x720",
+      "type": "image/svg+xml",
+      "form_factor": "narrow"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "16-Step Sequencer",
+      "short_name": "Sequencer",
+      "description": "Open the sequencer for drum programming",
+      "url": "./?action=sequencer",
+      "icons": [
+        {
+          "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 96 96'><rect fill='%23FF5A00' width='96' height='96' rx='20'/><g transform='translate(8,8) scale(0.85)'><rect x='8' y='8' width='72' height='72' fill='none' stroke='%23000' stroke-width='2'/><circle cx='14' cy='14' r='3' fill='%23000'/><circle cx='26' cy='14' r='3' fill='%23000'/><circle cx='38' cy='14' r='3' fill='%23000'/><circle cx='50' cy='14' r='3' fill='%23000'/></g><text x='48' y='75' font-size='28' fill='%23000' text-anchor='middle' font-family='monospace' font-weight='bold'>🎛️</text></svg>",
+          "sizes": "96x96",
+          "type": "image/svg+xml"
+        }
+      ]
+    },
+    {
+      "name": "Piano Roll",
+      "short_name": "Piano Roll",
+      "description": "Open the piano roll for note editing",
+      "url": "./?action=pianoroll",
+      "icons": [
+        {
+          "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 96 96'><rect fill='%23FFB000' width='96' height='96' rx='20'/><g transform='translate(12,20) scale(0.8)'><rect x='0' y='0' width='8' height='40' fill='%23fff' stroke='%23000' stroke-width='1'/><rect x='10' y='0' width='8' height='40' fill='%23fff' stroke='%23000' stroke-width='1'/><rect x='20' y='0' width='8' height='40' fill='%23000' stroke='%23000' stroke-width='1'/><rect x='30' y='0' width='8' height='40' fill='%23fff' stroke='%23000' stroke-width='1'/><rect x='40' y='0' width='8' height='40' fill='%23fff' stroke='%23000' stroke-width='1'/></g><text x='48' y='75' font-size='28' fill='%23000' text-anchor='middle' font-family='monospace' font-weight='bold'>🎼</text></svg>",
+          "sizes": "96x96",
+          "type": "image/svg+xml"
+        }
+      ]
+    },
+    {
+      "name": "Sample Chopper",
+      "short_name": "Chopper",
+      "description": "Open the sample chopper for slicing",
+      "url": "./?action=chopper",
+      "icons": [
+        {
+          "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 96 96'><rect fill='%23FFE600' width='96' height='96' rx='20'/><g transform='translate(20,20) scale(1.2)'><circle cx='16' cy='16' r='14' fill='none' stroke='%23000' stroke-width='2'/><line x1='16' y1='2' x2='16' y2='30' stroke='%23000' stroke-width='2'/><line x1='2' y1='16' x2='30' y2='16' stroke='%23000' stroke-width='2'/></g><text x='48' y='75' font-size='28' fill='%23000' text-anchor='middle' font-family='monospace' font-weight='bold'>✂️</text></svg>",
+          "sizes": "96x96",
+          "type": "image/svg+xml"
+        }
+      ]
+    }
+  ],
+  "share_target": {
+    "action": "/share",
+    "method": "POST",
+    "enctype": "multipart/form-data",
+    "params": {
+      "title": "title",
+      "text": "text",
+      "url": "url",
+      "files": [
+        {
+          "name": "media",
+          "accept": ["audio/*", "application/json"]
+        }
+      ]
+    }
+  }
 }
