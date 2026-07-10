@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>NEXUS DAW v37 ULTIMATE - SALAMANDER + SEQUENCER + MIDI + REC</title>
+<title>NEXUS DAW v38 OMNIVERSE - Piano Roll + FX + Mixer</title>
 <link rel="manifest" href="manifest.json">
 <style>
 :root[data-theme="ember"] {
@@ -16,13 +16,13 @@ body{background:var(--bg-deep);color:var(--text-main);font-family:'JetBrains Mon
 .nexus-dock{position:fixed;bottom:8px;left:50%;transform:translateX(-50%);background:var(--bg-console);border:1px solid var(--border-hardware);padding:8px;display:flex;gap:6px;z-index:9999}
 .dock-btn{width:40px;height:40px;background:var(--bg-rack);border:1px solid var(--border-hardware);color:var(--neon-secondary);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:18px}
 .dock-btn:hover{border-color:var(--neon-primary);color:var(--neon-primary)}
-.window{position:absolute;background:var(--bg-window);border:1px solid var(--border-hardware);min-width:380px;box-shadow:0 8px 32px rgba(0,0,0,0.8)}
+.window{position:absolute;background:var(--bg-window);border:1px solid var(--border-hardware);min-width:380px;box-shadow:0 8px 32px rgba(0,0,0,0.8);overflow:hidden}
 .window-header{background:var(--bg-rack);padding:6px 8px;border-bottom:1px solid var(--border-hardware);cursor:move;display:flex;justify-content:space-between;align-items:center}
 .window-title{color:var(--neon-secondary);font-weight:700;font-size:10px;letter-spacing:1px}
 .window-controls{display:flex;gap:4px}
 .win-btn{width:16px;height:16px;background:var(--bg-console);border:1px solid var(--border-hardware);color:var(--text-dim);cursor:pointer;font-size:8px;display:flex;align-items:center;justify-content:center}
 .win-btn:hover{background:var(--neon-primary);color:#000}
-.window-body{padding:12px}
+.window-body{padding:12px;overflow:auto;height:calc(100% - 30px)}
 .sf2-input{width:100%;background:var(--bg-deep);border:1px solid var(--border-hardware);color:var(--text-main);padding:6px;font-size:10px;margin-bottom:6px}
 .sf2-btn{width:100%;background:var(--neon-primary);border:none;color:#000;padding:8px;font-size:10px;font-weight:700;cursor:pointer;margin-bottom:6px}
 .sf2-btn:hover{background:var(--neon-secondary)}
@@ -57,6 +57,23 @@ body{background:var(--bg-deep);color:var(--text-main);font-family:'JetBrains Mon
 .seq-step.active{background:var(--neon-primary)}
 .seq-step.playing{border-color:var(--neon-accent);box-shadow:0 0 8px var(--neon-accent)}
 .bpm-input{width:60px;background:var(--bg-deep);border:1px solid var(--border-hardware);color:var(--neon-accent);padding:4px;font-size:10px;text-align:center}
+.pianoroll{height:200px;background:var(--bg-deep);border:1px solid var(--border-hardware);position:relative;overflow:auto;margin-top:8px}
+.pr-grid{position:absolute;inset:0;background-image:linear-gradient(var(--border-hardware) 1px, transparent 1px),linear-gradient(90deg, var(--border-hardware) 1px, transparent 1px);background-size:40px 20px}
+.pr-note{position:absolute;height:18px;background:var(--neon-primary);border:1px solid var(--neon-accent);cursor:move;font-size:7px;color:#000;padding:0 2px;display:flex;align-items:center}
+.fx-row{display:flex;gap:6px;margin-bottom:6px;align-items:center}
+.fx-label{width:60px;font-size:8px;color:var(--neon-secondary)}
+.fx-knob{flex:1;height:4px;background:var(--bg-deep);appearance:none;border:1px solid var(--border-hardware)}
+.fx-knob::-webkit-slider-thumb{appearance:none;width:12px;height:12px;background:var(--neon-secondary);cursor:pointer}
+.mixer{margin-top:8px;border-top:1px solid var(--border-hardware);padding-top:8px}
+.mix-ch{display:flex;gap:4px;margin-bottom:4px;align-items:center}
+.mix-label{width:40px;font-size:8px;color:var(--text-dim)}
+.mix-fader{flex:1;height:4px;background:var(--bg-deep);appearance:none;border:1px solid var(--border-hardware)}
+.mix-fader::-webkit-slider-thumb{appearance:none;width:12px;height:12px;background:var(--neon-accent);cursor:pointer}
+.mix-btn{width:20px;height:20px;background:var(--bg-rack);border:1px solid var(--border-hardware);color:var(--text-dim);font-size:8px;cursor:pointer}
+.mix-btn.active{background:var(--neon-primary);color:#000}
+.chop-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:4px;margin-top:8px}
+.chop-pad{height:50px;background:var(--bg-rack);border:1px solid var(--border-hardware);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:8px;color:var(--neon-secondary)}
+.chop-pad.loaded{background:var(--neon-primary);color:#000}
 </style>
 </head>
 <body>
@@ -65,10 +82,15 @@ body{background:var(--bg-deep);color:var(--text-main);font-family:'JetBrains Mon
 <div class="nexus-dock">
   <button class="dock-btn" onclick="openDecentSampler()" title="Decent Sampler">🎹</button>
   <button class="dock-btn" onclick="openSequencer()" title="16-Step Sequencer">🎛️</button>
+  <button class="dock-btn" onclick="openPianoRoll()" title="Piano Roll">🎼</button>
+  <button class="dock-btn" onclick="openFXRack()" title="FX Rack">🎚️</button>
+  <button class="dock-btn" onclick="openMixer()" title="8-Ch Mixer">📊</button>
+  <button class="dock-btn" onclick="openChopper()" title="Sample Chopper">✂️</button>
   <button class="dock-btn" onclick="toggleTheme()" title="Switch Theme">🎨</button>
 </div>
 
 <script src="https://unpkg.com/webaudio-tinysynth@1.6.3/webaudio-tinysynth.min.js"></script>
+<script src="https://unpkg.com/tone@14.7.77/build/Tone.js"></script>
 <script>
 if('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js');
 
@@ -82,6 +104,10 @@ let mediaRecorder = null;
 let recordedChunks = [];
 let midiAccess = null;
 
+// TONE.JS FX CHAIN
+let reverb, delay, chorus, masterGain;
+let mixerChannels = Array(8).fill().map(() => new Tone.Channel().toDestination());
+
 // SEQUENCER STATE
 let seqPlaying = false;
 let seqStep = 0;
@@ -93,6 +119,12 @@ let seqPattern = {
   hihat: new Array(16).fill(0),
   note: new Array(16).fill(0)
 };
+
+// PIANO ROLL STATE
+let prNotes = [];
+
+// CHOPPER STATE
+let chopSamples = Array(16).fill(null);
 
 const GM_INSTRUMENTS = [
   '0: Acoustic Grand Piano','4: Electric Piano 1','24: Acoustic Guitar nylon','25: Acoustic Guitar steel',
@@ -113,6 +145,14 @@ const SF2_PRESETS = [
   {name: 'Salamander Piano 1GB', url: 'https://musical-artifacts.com/artifacts/3/Piano.sf2'},
   {name: 'FluidR3 GM 148MB', url: 'https://keymusician01.s3.amazonaws.com/FluidR3_GM.sf2'}
 ];
+
+async function initFX() {
+  await Tone.start();
+  reverb = new Tone.Reverb({decay: 2, wet: 0}).toDestination();
+  delay = new Tone.FeedbackDelay({delayTime: "8n", feedback: 0.3, wet: 0}).connect(reverb);
+  chorus = new Tone.Chorus({frequency: 1.5, delayTime: 3.5, depth: 0.7, wet: 0}).connect(delay);
+  masterGain = new Tone.Gain(0.8).connect(chorus);
+}
 
 async function initMIDI() {
   const status = document.getElementById('midi-status');
@@ -254,6 +294,7 @@ async function loadSF2FromURL() {
     document.getElementById('instrument-select').disabled = false;
     document.getElementById('mode-toggle').disabled = false;
     initMIDI();
+    initFX();
   } catch(err) {
     status.textContent = '❌ Error: ' + err.message + ' | Coba GeneralUser dulu';
     status.style.color = '#FF3B30';
@@ -268,13 +309,13 @@ function changeInstrument() {
   if(instNum!== 128 && drumMode) toggleMode();
 }
 
-function playNote(midiNote, vel = currentVelocity) {
+function playNote(midiNote, vel = currentVelocity, channel = 0) {
   if(!synth) {
     document.getElementById('sf2-status').textContent = '⚠️ Klik LOAD SF2 dulu';
     return;
   }
-  synth.noteOn(0, midiNote, vel);
-  setTimeout(() => synth.noteOff(0, midiNote), 400);
+  synth.noteOn(channel, midiNote, vel);
+  setTimeout(() => synth.noteOff(channel, midiNote), 400);
 }
 
 function updateVelocity(val) {
@@ -305,7 +346,7 @@ function toggleMode() {
     document.getElementById('instrument-select').value = '128';
     changeInstrument();
     kbdArea.innerHTML = `<div class="drum-pad">${DRUM_MAP.map(d => 
-      `<div class="pad" onclick="playNote(${d.note})" data-midi="${d.note}">${d.name}</div>`
+      `<div class="pad" onclick="playNote(${d.note},100,9)" data-midi="${d.note}">${d.name}</div>`
     ).join('')}</div>`;
   } else {
     btn.textContent = '🥁 SWITCH TO DRUM PAD';
@@ -320,21 +361,50 @@ function toggleMode() {
   }
 }
 
+function updateReverb(val) {
+  if(reverb) reverb.wet.value = val / 100;
+}
+function updateDelay(val) {
+  if(delay) delay.wet.value = val / 100;
+}
+function updateChorus(val) {
+  if(chorus) chorus.wet.value = val / 100;
+}
+
+function updateMixVol(ch, val) {
+  if(mixerChannels[ch]) mixerChannels[ch].volume.value = Tone.gainToDb(val / 100);
+}
+function toggleMixMute(ch) {
+  if(mixerChannels[ch]) mixerChannels[ch].mute =!mixerChannels[ch].mute;
+}
+
+async function loadSample(e, padIdx) {
+  const file = e.target.files[0];
+  if(!file) return;
+  const buffer = await file.arrayBuffer();
+  chopSamples[padIdx] = await Tone.context.decodeAudioData(buffer);
+  document.querySelectorAll('.chop-pad')[padIdx].classList.add('loaded');
+}
+function playChop(padIdx) {
+  if(!chopSamples[padIdx]) return;
+  const player = new Tone.Player(chopSamples[padIdx]).connect(masterGain);
+  player.start();
+}
+
 function openDecentSampler() {
   const win = document.createElement('div');
   win.className = 'window';
   win.style.left = '40px';
   win.style.top = '40px';
   win.style.width = '480px';
+  win.style.height = '600px';
   win.style.zIndex = ++windowZ;
-
   const savedURL = localStorage.getItem('nexus_sf2_url') || SF2_PRESETS[0].url;
   let instOptions = GM_INSTRUMENTS.map(i => `<option value="${i.split(':')[0]}">${i}</option>`).join('');
   let sf2Options = SF2_PRESETS.map(s => `<option value="${s.url}">${s.name}</option>`).join('');
-
   win.innerHTML = `
     <div class="window-header">
-      <div class="window-title">DECENT SAMPLER - FINAL BOSS MODE</div>
+      <div class="window-title">DECENT SAMPLER - OMNIVERSE MODE</div>
       <div class="window-controls">
         <button class="win-btn" onclick="this.closest('.window').remove()">✕</button>
       </div>
@@ -387,8 +457,8 @@ function openSequencer() {
   win.style.left = '540px';
   win.style.top = '40px';
   win.style.width = '500px';
+  win.style.height = '350px';
   win.style.zIndex = ++windowZ;
-
   win.innerHTML = `
     <div class="window-header">
       <div class="window-title">16-STEP SEQUENCER - 808 STYLE</div>
@@ -403,30 +473,167 @@ function openSequencer() {
         <span style="color:var(--text-dim);font-size:10px;align-self:center">BPM</span>
       </div>
       <div class="sequencer">
+        ${['KICK','SNARE','HIHAT','NOTE'].map(track => `
         <div class="seq-row">
-          <div class="seq-label">KICK</div>
+          <div class="seq-label">${track}</div>
           <div class="seq-steps">
-            ${Array(16).fill(0).map((_,i) => `<div class="seq-step" data-track="kick" data-step="${i}" onclick="toggleSeqStep('kick',${i})"></div>`).join('')}
+            ${Array(16).fill(0).map((_,i) => `<div class="seq-step" data-track="${track.toLowerCase()}" data-step="${i}" onclick="toggleSeqStep('${track.toLowerCase()}',${i})"></div>`).join('')}
           </div>
         </div>
-        <div class="seq-row">
-          <div class="seq-label">SNARE</div>
-          <div class="seq-steps">
-            ${Array(16).fill(0).map((_,i) => `<div class="seq-step" data-track="snare" data-step="${i}" onclick="toggleSeqStep('snare',${i})"></div>`).join('')}
-          </div>
+        `).join('')}
+      </div>
+    </div>
+  `;
+  workspace.appendChild(win);
+  makeDraggable(win);
+}
+
+function openPianoRoll() {
+  const win = document.createElement('div');
+  win.className = 'window';
+  win.style.left = '40px';
+  win.style.top = '400px';
+  win.style.width = '600px';
+  win.style.height = '300px';
+  win.style.zIndex = ++windowZ;
+  win.innerHTML = `
+    <div class="window-header">
+      <div class="window-title">PIANO ROLL EDITOR - FL STYLE</div>
+      <div class="window-controls">
+        <button class="win-btn" onclick="this.closest('.window').remove()">✕</button>
+      </div>
+    </div>
+    <div class="window-body">
+      <div class="transport">
+        <button class="transport-btn" onclick="addNote()">+ ADD NOTE</button>
+        <button class="transport-btn" onclick="clearNotes()">CLEAR</button>
+        <button class="transport-btn play" onclick="playPRNotes()">▶ PLAY</button>
+      </div>
+      <div class="pianoroll">
+        <div class="pr-grid"></div>
+        <div id="pr-notes"></div>
+      </div>
+    </div>
+  `;
+  workspace.appendChild(win);
+  makeDraggable(win);
+}
+
+function addNote() {
+  const note = {midi: 60, start: 0, duration: 1};
+  prNotes.push(note);
+  renderPRNotes();
+}
+function clearNotes() {
+  prNotes = [];
+  renderPRNotes();
+}
+function renderPRNotes() {
+  const container = document.getElementById('pr-notes');
+  if(!container) return;
+  container.innerHTML = prNotes.map((n,i) => 
+    `<div class="pr-note" style="left:${n.start*40}px;top:${(127-n.midi)*20}px;width:${n.duration*40}px" onclick="delNote(${i})">C4</div>`
+  ).join('');
+}
+function delNote(i) {
+  prNotes.splice(i,1);
+  renderPRNotes();
+}
+function playPRNotes() {
+  if(!synth) return;
+  prNotes.forEach(n => {
+    setTimeout(() => {
+      synth.noteOn(0, n.midi, 100);
+      setTimeout(() => synth.noteOff(0, n.midi), n.duration * 500);
+    }, n.start * 500);
+  });
+}
+
+function openFXRack() {
+  const win = document.createElement('div');
+  win.className = 'window';
+  win.style.left = '540px';
+  win.style.top = '400px';
+  win.style.width = '400px';
+  win.style.zIndex = ++windowZ;
+  win.innerHTML = `
+    <div class="window-header">
+      <div class="window-title">FX RACK - REVERB/DELAY/CHORUS</div>
+      <div class="window-controls">
+        <button class="win-btn" onclick="this.closest('.window').remove()">✕</button>
+      </div>
+    </div>
+    <div class="window-body">
+      <div class="fx-row">
+        <div class="fx-label">REVERB</div>
+        <input type="range" min="0" max="100" value="0" class="fx-knob" oninput="updateReverb(this.value)">
+      </div>
+      <div class="fx-row">
+        <div class="fx-label">DELAY</div>
+        <input type="range" min="0" max="100" value="0" class="fx-knob" oninput="updateDelay(this.value)">
+      </div>
+      <div class="fx-row">
+        <div class="fx-label">CHORUS</div>
+        <input type="range" min="0" max="100" value="0" class="fx-knob" oninput="updateChorus(this.value)">
+      </div>
+    </div>
+  `;
+  workspace.appendChild(win);
+  makeDraggable(win);
+}
+
+function openMixer() {
+  const win = document.createElement('div');
+  win.className = 'window';
+  win.style.left = '40px';
+  win.style.top = '720px';
+  win.style.width = '500px';
+  win.style.zIndex = ++windowZ;
+  win.innerHTML = `
+    <div class="window-header">
+      <div class="window-title">8-CHANNEL MIXER</div>
+      <div class="window-controls">
+        <button class="win-btn" onclick="this.closest('.window').remove()">✕</button>
+      </div>
+    </div>
+    <div class="window-body">
+      <div class="mixer">
+        ${Array(8).fill(0).map((_, i) => `
+        <div class="mix-ch">
+          <div class="mix-label">CH${i+1}</div>
+          <input type="range" min="0" max="100" value="80" class="mix-fader" oninput="updateMixVol(${i},this.value)">
+          <button class="mix-btn" onclick="toggleMixMute(${i})">M</button>
         </div>
-        <div class="seq-row">
-          <div class="seq-label">HIHAT</div>
-          <div class="seq-steps">
-            ${Array(16).fill(0).map((_,i) => `<div class="seq-step" data-track="hihat" data-step="${i}" onclick="toggleSeqStep('hihat',${i})"></div>`).join('')}
-          </div>
+        `).join('')}
+      </div>
+    </div>
+  `;
+  workspace.appendChild(win);
+  makeDraggable(win);
+}
+
+function openChopper() {
+  const win = document.createElement('div');
+  win.className = 'window';
+  win.style.left = '540px';
+  win.style.top = '720px';
+  win.style.width = '400px';
+  win.style.zIndex = ++windowZ;
+  win.innerHTML = `
+    <div class="window-header">
+      <div class="window-title">SAMPLE CHOPPER - 16 PADS</div>
+      <div class="window-controls">
+        <button class="win-btn" onclick="this.closest('.window').remove()">✕</button>
+      </div>
+    </div>
+    <div class="window-body">
+      <div class="chop-grid">
+        ${Array(16).fill(0).map((_, i) => `
+        <div class="chop-pad" onclick="playChop(${i})">
+          <input type="file" accept="audio/*" style="display:none" onchange="loadSample(event,${i})">
+          <label style="cursor:pointer;width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:8px">PAD ${i+1}</label>
         </div>
-        <div class="seq-row">
-          <div class="seq-label">NOTE C4</div>
-          <div class="seq-steps">
-            ${Array(16).fill(0).map((_,i) => `<div class="seq-step" data-track="note" data-step="${i}" onclick="toggleSeqStep('note',${i})"></div>`).join('')}
-          </div>
-        </div>
+        `).join('')}
       </div>
     </div>
   `;
@@ -453,14 +660,14 @@ function makeDraggable(win) {
 
 function toggleTheme() {
   const themes = ['ember','obsidian','cyberpunk'];
-  const current = document.documentElement.getAttribute('data-theme');
+  const current = document.documentElement.getAttribute('data-theme') || 'ember';
   const next = themes[(themes.indexOf(current)+1)%3];
   document.documentElement.setAttribute('data-theme', next);
 }
 
 window.onload = () => {
   openDecentSampler();
-  setTimeout(() => openSequencer(), 500);
+  setTimeout(() => openSequencer(), 300);
 };
 </script>
 </body>
