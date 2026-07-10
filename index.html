@@ -1,119 +1,467 @@
 <!DOCTYPE html>
 <html lang="en" data-theme="ember">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>NEXUS DAW v37 — Ultimate Enterprise Window Manager</title>
-    <link rel="manifest" href="manifest.json">
-    <meta name="theme-color" content="#FF5A00">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
-    <style>
-        :root { --header-h: 48px; --dock-h: 40px; --window-h: 32px; --transition-smooth: all 0.25s cubic-bezier(0.4, 0, 0.2, 1); }
-        :root[data-theme="ember"] { --bg-deep: #030407; --bg-chassis: #0c0f15; --bg-viewport: #080a0f; --bg-panel: #0f131b; --border-hardware: #1A1F2E; --border-glow: #2D3548; --neon-primary: #FF5A00; --neon-secondary: #FFB000; --neon-accent: #FFE600; --text-main: #FFF8F0; --text-dim: #6B5D4D; }
-        :root[data-theme="obsidian"] { --bg-deep: #050609; --bg-chassis: #0b0f19; --bg-viewport: #06070b; --bg-panel: #0d121f; --border-hardware: #191f2d; --border-glow: #252f47; --neon-primary: #0077ff; --neon-secondary: #00ff55; --neon-accent: #ff0066; --text-main: #f8fafc; --text-dim: #475569; }
-        :root[data-theme="cyberpunk"] { --bg-deep: #0a0514; --bg-chassis: #1a0f2e; --bg-viewport: #0f0820; --bg-panel: #140a2d; --border-hardware: #2d1a4f; --border-glow: #4a2d7a; --neon-primary: #ff0066; --neon-secondary: #00f0ff; --neon-accent: #ff00ff; --text-main: #ffe6ff; --text-dim: #6b4d8a; }
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; user-select: none; }
-        body { background: var(--bg-deep); color: var(--text-main); height: 100vh; display: flex; flex-direction: column; overflow: hidden; }
-        ::-webkit-scrollbar { width: 4px; height: 4px; }
-        ::-webkit-scrollbar-track { background: var(--bg-deep); }
-        ::-webkit-scrollbar-thumb { background: var(--border-hardware); border-radius: 2px; }
-        ::-webkit-scrollbar-thumb:hover { background: var(--neon-primary); }
-      .nexus-app-header { background: var(--bg-chassis); border-bottom: 1px solid var(--border-hardware); height: var(--header-h); display: flex; align-items: center; justify-content: space-between; padding: 0 16px; box-shadow: 0 15px 35px rgba(0,0,0,0.8), inset 0 1px 1px rgba(255,255,255,0.05); z-index: 10000; flex-shrink: 0; }
-      .rack-brand { font-weight: 700; font-size: 13px; letter-spacing: 2px; font-family: 'JetBrains Mono', monospace; }
-      .rack-brand span { color: var(--neon-primary); text-shadow: 0 0 10px color-mix(in srgb, var(--neon-primary) 40%, transparent); }
-      .transport-rack { display: flex; align-items: center; gap: 6px; }
-      .btn-console { background: var(--bg-viewport); border: 1px solid var(--border-hardware); color: var(--text-dim); padding: 5px 14px; border-radius: 4px; font-size: 11px; font-weight: 600; cursor: pointer; text-transform: uppercase; transition: var(--transition-smooth); }
-      .btn-console:hover { color: var(--text-main); border-color: var(--border-glow); }
-      .btn-console.play-active { background: color-mix(in srgb, var(--neon-secondary) 10%, transparent); color: var(--neon-secondary); border-color: var(--neon-secondary); box-shadow: 0 0 12px color-mix(in srgb, var(--neon-secondary) 30%, transparent); }
-      .theme-switcher { display: flex; gap: 4px; background: var(--bg-viewport); border: 1px solid var(--border-hardware); border-radius: 4px; padding: 3px; }
-      .theme-btn { width: 20px; height: 20px; border-radius: 3px; cursor: pointer; border: 2px solid transparent; }
-      .theme-btn.active { border-color: var(--text-main); }
-      .theme-btn[data-theme="obsidian"] { background: linear-gradient(135deg, #0077ff, #00ff55); }
-      .theme-btn[data-theme="cyberpunk"] { background: linear-gradient(135deg, #ff0066, #00f0ff); }
-      .theme-btn[data-theme="ember"] { background: linear-gradient(135deg, #FF5A00, #FFE600); }
-        #nexus-desktop { position: relative; flex: 1; overflow: hidden; }
-      .nexus-dock { position: absolute; bottom: 0; left: 0; right: 0; height: var(--dock-h); background: color-mix(in srgb, var(--bg-chassis) 90%, transparent); border-top: 1px solid var(--border-hardware); display: flex; align-items: center; padding: 0 8px; gap: 4px; backdrop-filter: blur(10px); z-index: 10001; overflow-x: auto; }
-      .dock-icon { width: 32px; height: 32px; background: var(--bg-viewport); border: 1px solid var(--border-hardware); border-radius: 4px; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 700; cursor: pointer; flex-shrink: 0; }
-      .dock-icon.active { border-color: var(--neon-primary); color: var(--neon-primary); }
-      .nexus-window { position: absolute; background: linear-gradient(135deg, color-mix(in srgb, var(--bg-chassis) 110%, black), var(--bg-chassis)); border: 2px solid var(--border-hardware); border-radius: 12px; box-shadow: 0 15px 35px rgba(0,0,0,0.8), inset 0 1px 1px rgba(255,255,255,0.05); display: flex; flex-direction: column; overflow: hidden; min-width: 320px; min-height: 200px; transition: box-shadow 0.2s; }
-      .nexus-window.active { border-color: var(--border-glow); z-index: 9999; }
-      .nexus-window.dragging { opacity: 0.85; transition: none; }
-      .nexus-window.minimized { display: none; }
-      .nexus-window.maximized { top: 0!important; left: 0!important; width: 100%!important; height: calc(100% - var(--dock-h))!important; border-radius: 0; }
-      .window-titlebar { height: var(--window-h); background: linear-gradient(to bottom, color-mix(in srgb, var(--bg-chassis) 120%, white), var(--bg-chassis)); border-bottom: 1px solid var(--border-hardware); display: flex; align-items: center; justify-content: space-between; padding: 0 12px; font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-dim); cursor: grab; flex-shrink: 0; }
-      .window-titlebar:active { cursor: grabbing; }
-      .window-titlebar.title { font-family: 'JetBrains Mono'; color: var(--neon-primary); }
-      .window-controls { display: flex; gap: 6px; }
-      .win-btn { width: 14px; height: 14px; border-radius: 3px; background: var(--bg-viewport); border: 1px solid var(--border-hardware); font-size: 9px; font-weight: bold; display: flex; align-items: center; justify-content: center; color: var(--text-dim); cursor: pointer; }
-      .win-btn:hover { color: #fff; background: var(--border-hardware); }
-      .win-btn.close:hover { background: var(--neon-primary); color: #fff; }
-      .window-content { flex: 1; background: var(--bg-panel); overflow: auto; position: relative; padding: 10px; }
-      .resize-handle { position: absolute; background: transparent; z-index: 10; }
-      .resize-handle.n { top: -3px; left: 0; right: 0; height: 6px; cursor: n-resize; }
-      .resize-handle.s { bottom: -3px; left: 0; right: 0; height: 6px; cursor: s-resize; }
-      .resize-handle.e { top: 0; right: -3px; bottom: 0; width: 6px; cursor: e-resize; }
-      .resize-handle.w { top: 0; left: -3px; bottom: 0; width: 6px; cursor: w-resize; }
-      .resize-handle.ne { top: -3px; right: -3px; width: 10px; height: 10px; cursor: ne-resize; }
-      .resize-handle.nw { top: -3px; left: -3px; width: 10px; height: 10px; cursor: nw-resize; }
-      .resize-handle.se { bottom: -3px; right: -3px; width: 10px; height: 10px; cursor: se-resize; }
-      .resize-handle.sw { bottom: -3px; left: -3px; width: 10px; height: 10px; cursor: sw-resize; }
-      .rotary-knob-hardware { width: 36px; height: 34px; border-radius: 50%; background: color-mix(in srgb, var(--bg-chassis) 80%, black); border: 2px solid var(--border-glow); position: relative; cursor: ns-resize; box-shadow: 0 4px 6px rgba(0,0,0,0.5); margin: 0 auto 4px auto; }
-      .rotary-knob-hardware::after { content: ''; position: absolute; top: 3px; left: 50%; width: 2px; height: 6px; background: var(--neon-secondary); box-shadow: 0 0 6px var(--neon-secondary); transform: translateX(-50%); }
-      .pad-matrix { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
-      .drum-pad { aspect-ratio: 1; background: var(--bg-deep); border: 1px solid var(--border-hardware); border-radius: 8px; cursor: pointer; transition: all 0.15s ease; box-shadow: inset 0 2px 6px rgba(0,0,0,0.9); }
-      .drum-pad:active { background: color-mix(in srgb, var(--neon-secondary) 15%, transparent); border-color: var(--neon-secondary); box-shadow: 0 0 12px color-mix(in srgb, var(--neon-secondary) 40%, transparent); }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>NEXUS DAW v37 ULTIMATE - SALAMANDER + SEQUENCER + MIDI + REC</title>
+<link rel="manifest" href="manifest.json">
+<style>
+:root[data-theme="ember"] {
+  --bg-deep:#030407;--bg-console:#0A0B0E;--bg-rack:#111215;--bg-window:#16171B;
+  --neon-primary:#FF5A00;--neon-secondary:#FFB000;--neon-accent:#FFE600;
+  --text-main:#E8E8E8;--text-dim:#7A7A7A;--border-hardware:#2A2A2E;--rec-red:#FF3B30;--play-green:#30D158;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--bg-deep);color:var(--text-main);font-family:'JetBrains Mono',monospace;font-size:11px;overflow:hidden;height:100vh}
+.nexus-dock{position:fixed;bottom:8px;left:50%;transform:translateX(-50%);background:var(--bg-console);border:1px solid var(--border-hardware);padding:8px;display:flex;gap:6px;z-index:9999}
+.dock-btn{width:40px;height:40px;background:var(--bg-rack);border:1px solid var(--border-hardware);color:var(--neon-secondary);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:18px}
+.dock-btn:hover{border-color:var(--neon-primary);color:var(--neon-primary)}
+.window{position:absolute;background:var(--bg-window);border:1px solid var(--border-hardware);min-width:380px;box-shadow:0 8px 32px rgba(0,0,0,0.8)}
+.window-header{background:var(--bg-rack);padding:6px 8px;border-bottom:1px solid var(--border-hardware);cursor:move;display:flex;justify-content:space-between;align-items:center}
+.window-title{color:var(--neon-secondary);font-weight:700;font-size:10px;letter-spacing:1px}
+.window-controls{display:flex;gap:4px}
+.win-btn{width:16px;height:16px;background:var(--bg-console);border:1px solid var(--border-hardware);color:var(--text-dim);cursor:pointer;font-size:8px;display:flex;align-items:center;justify-content:center}
+.win-btn:hover{background:var(--neon-primary);color:#000}
+.window-body{padding:12px}
+.sf2-input{width:100%;background:var(--bg-deep);border:1px solid var(--border-hardware);color:var(--text-main);padding:6px;font-size:10px;margin-bottom:6px}
+.sf2-btn{width:100%;background:var(--neon-primary);border:none;color:#000;padding:8px;font-size:10px;font-weight:700;cursor:pointer;margin-bottom:6px}
+.sf2-btn:hover{background:var(--neon-secondary)}
+.sf2-status{font-size:9px;color:var(--text-dim);padding:4px;background:var(--bg-deep);border:1px solid var(--border-hardware);margin-bottom:8px}
+.instrument-select{width:100%;background:var(--bg-deep);border:1px solid var(--border-hardware);color:var(--neon-accent);padding:6px;font-size:10px;margin-bottom:8px}
+.controls-row{display:flex;gap:6px;margin-bottom:8px}
+.ctrl-group{flex:1}
+.ctrl-label{font-size:8px;color:var(--text-dim);margin-bottom:2px;display:block}
+.ctrl-slider{width:100%;height:4px;background:var(--bg-deep);appearance:none;border:1px solid var(--border-hardware)}
+.ctrl-slider::-webkit-slider-thumb{appearance:none;width:12px;height:12px;background:var(--neon-primary);cursor:pointer}
+.mode-toggle{background:var(--bg-rack);border:1px solid var(--border-hardware);color:var(--neon-secondary);padding:4px 8px;font-size:9px;cursor:pointer;margin-bottom:8px;width:100%}
+.mode-toggle.active{background:var(--neon-primary);color:#000;border-color:var(--neon-primary)}
+.transport{display:flex;gap:6px;margin-bottom:8px}
+.transport-btn{flex:1;background:var(--bg-rack);border:1px solid var(--border-hardware);color:var(--neon-secondary);padding:8px;font-size:10px;font-weight:700;cursor:pointer}
+.transport-btn.rec{background:var(--rec-red);color:#fff;border-color:var(--rec-red)}
+.transport-btn.play{background:var(--play-green);color:#000;border-color:var(--play-green)}
+.transport-btn.rec.active,.transport-btn.play.active{animation:pulse 1s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.5}}
+.midi-status{font-size:8px;color:var(--neon-accent);padding:4px;background:var(--bg-deep);border:1px solid var(--border-hardware);margin-bottom:8px;text-align:center}
+.kbd{display:grid;grid-template-columns:repeat(7,1fr);gap:2px}
+.key{height:40px;background:var(--bg-rack);border:1px solid var(--border-hardware);cursor:pointer}
+.key:active,.key.active{background:var(--neon-primary)}
+.key.black{background:var(--bg-deep);height:25px;transform:translateY(-15px)}
+.drum-pad{display:grid;grid-template-columns:repeat(4,1fr);gap:4px}
+.pad{height:60px;background:var(--bg-rack);border:1px solid var(--border-hardware);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:8px;color:var(--text-dim)}
+.pad:active{background:var(--neon-primary);color:#000;border-color:var(--neon-accent)}
+.sequencer{margin-top:8px;border-top:1px solid var(--border-hardware);padding-top:8px}
+.seq-row{display:flex;gap:2px;margin-bottom:4px;align-items:center}
+.seq-label{width:50px;font-size:8px;color:var(--text-dim)}
+.seq-steps{display:flex;gap:2px;flex:1}
+.seq-step{flex:1;height:20px;background:var(--bg-rack);border:1px solid var(--border-hardware);cursor:pointer}
+.seq-step.active{background:var(--neon-primary)}
+.seq-step.playing{border-color:var(--neon-accent);box-shadow:0 0 8px var(--neon-accent)}
+.bpm-input{width:60px;background:var(--bg-deep);border:1px solid var(--border-hardware);color:var(--neon-accent);padding:4px;font-size:10px;text-align:center}
+</style>
 </head>
 <body>
-    <header class="nexus-app-header">
-        <div class="rack-brand">⚡ NEXUS DAW // <span>ULTIMATE</span></div>
-        <div class="transport-rack">
-            <button class="btn-console" id="masterPlayTrigger">▶ Play</button>
-            <button class="btn-console" id="masterStopTrigger">■ Stop</button>
-            <button class="btn-console" onclick="WM.saveLayout('studio')">💾 Save</button>
-            <div class="theme-switcher">
-                <div class="theme-btn" data-theme="obsidian" title="Obsidian"></div>
-                <div class="theme-btn" data-theme="cyberpunk" title="Cyberpunk"></div>
-                <div class="theme-btn active" data-theme="ember" title="Ember"></div>
-            </div>
+<div id="workspace"></div>
+
+<div class="nexus-dock">
+  <button class="dock-btn" onclick="openDecentSampler()" title="Decent Sampler">🎹</button>
+  <button class="dock-btn" onclick="openSequencer()" title="16-Step Sequencer">🎛️</button>
+  <button class="dock-btn" onclick="toggleTheme()" title="Switch Theme">🎨</button>
+</div>
+
+<script src="https://unpkg.com/webaudio-tinysynth@1.6.3/webaudio-tinysynth.min.js"></script>
+<script>
+if('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js');
+
+const workspace = document.getElementById('workspace');
+let windowZ = 100;
+let synth = null;
+let drumMode = false;
+let currentVelocity = 100;
+let isRecording = false;
+let mediaRecorder = null;
+let recordedChunks = [];
+let midiAccess = null;
+
+// SEQUENCER STATE
+let seqPlaying = false;
+let seqStep = 0;
+let seqBPM = 120;
+let seqInterval = null;
+let seqPattern = {
+  kick: new Array(16).fill(0),
+  snare: new Array(16).fill(0),
+  hihat: new Array(16).fill(0),
+  note: new Array(16).fill(0)
+};
+
+const GM_INSTRUMENTS = [
+  '0: Acoustic Grand Piano','4: Electric Piano 1','24: Acoustic Guitar nylon','25: Acoustic Guitar steel',
+  '26: Electric Guitar jazz','27: Electric Guitar clean','29: Overdriven Guitar','30: Distortion Guitar',
+  '32: Acoustic Bass','33: Electric Bass finger','40: Violin','48: String Ensemble 1','56: Trumpet',
+  '73: Flute','80: Lead 1 square','81: Lead 2 sawtooth','88: Pad 1 new age','128: Standard Drum Kit'
+];
+
+const DRUM_MAP = [
+  {note: 36, name: 'Kick'}, {note: 38, name: 'Snare'}, {note: 42, name: 'HiHat C'}, {note: 46, name: 'HiHat O'},
+  {note: 41, name: 'Tom L'}, {note: 45, name: 'Tom M'}, {note: 48, name: 'Tom H'}, {note: 49, name: 'Crash'},
+  {note: 51, name: 'Ride'}, {note: 53, name: 'Ride Bell'}, {note: 37, name: 'Rim'}, {note: 39, name: 'Clap'},
+  {note: 54, name: 'Tamb'}, {note: 56, name: 'Cowbell'}, {note: 69, name: 'Shaker'}, {note: 75, name: 'Clave'}
+];
+
+const SF2_PRESETS = [
+  {name: 'GeneralUser GS 30MB', url: 'https://www.schristiancollins.com/generaluser/GeneralUser%20GS%20v1.471.sf2'},
+  {name: 'Salamander Piano 1GB', url: 'https://musical-artifacts.com/artifacts/3/Piano.sf2'},
+  {name: 'FluidR3 GM 148MB', url: 'https://keymusician01.s3.amazonaws.com/FluidR3_GM.sf2'}
+];
+
+async function initMIDI() {
+  const status = document.getElementById('midi-status');
+  if(!navigator.requestMIDIAccess) {
+    status.textContent = '❌ Browser tidak support MIDI';
+    return;
+  }
+  try {
+    midiAccess = await navigator.requestMIDIAccess();
+    const inputs = midiAccess.inputs.values();
+    let found = false;
+    for(let input of inputs) {
+      input.onmidimessage = handleMIDIMessage;
+      status.textContent = `✅ MIDI: ${input.name}`;
+      found = true;
+    }
+    if(!found) status.textContent = '⚠️ MIDI ready. Colok keyboard USB';
+    midiAccess.onstatechange = initMIDI;
+  } catch(e) {
+    status.textContent = '❌ MIDI Error: ' + e.message;
+  }
+}
+
+function handleMIDIMessage(msg) {
+  if(!synth) return;
+  const [cmd, note, vel] = msg.data;
+  const type = cmd & 0xf0;
+  if(type === 0x90 && vel > 0) {
+    synth.noteOn(0, note, vel);
+    highlightKey(note, true);
+  } else if(type === 0x80 || (type === 0x90 && vel === 0)) {
+    synth.noteOff(0, note);
+    highlightKey(note, false);
+  } else if(type === 0xB0) {
+    if(note === 1) synth.controllerChange(0, 1, vel);
+  } else if(type === 0xE0) {
+    const bend = ((vel << 7) | note) - 8192;
+    synth.pitchBend(0, bend);
+  }
+}
+
+function highlightKey(midiNote, on) {
+  const key = document.querySelector(`[data-midi="${midiNote}"]`);
+  if(key) key.classList.toggle('active', on);
+}
+
+async function toggleRecord() {
+  const btn = document.getElementById('rec-btn');
+  if(!isRecording) {
+    if(!synth) {alert('Load SF2 dulu');return;}
+    const stream = synth.getAudioNode().context.createMediaStreamDestination();
+    synth.getAudioNode().connect(stream);
+    mediaRecorder = new MediaRecorder(stream.stream);
+    recordedChunks = [];
+    mediaRecorder.ondataavailable = e => recordedChunks.push(e.data);
+    mediaRecorder.onstop = exportWAV;
+    mediaRecorder.start();
+    isRecording = true;
+    btn.textContent = '■ STOP';
+    btn.classList.add('active');
+  } else {
+    mediaRecorder.stop();
+    isRecording = false;
+    btn.textContent = '● REC';
+    btn.classList.remove('active');
+  }
+}
+
+function exportWAV() {
+  const blob = new Blob(recordedChunks, {type: 'audio/webm'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  const timestamp = new Date().toISOString().slice(0,19).replace(/:/g,'-').replace('T','_');
+  a.href = url;
+  a.download = `NEXUS_DAW_${timestamp}.wav`;
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+function toggleSeqPlay() {
+  const btn = document.getElementById('seq-play-btn');
+  if(!seqPlaying) {
+    if(!synth) {alert('Load SF2 dulu');return;}
+    seqPlaying = true;
+    seqStep = 0;
+    btn.textContent = '■ STOP';
+    btn.classList.add('active');
+    const interval = (60 / seqBPM / 4) * 1000;
+    seqInterval = setInterval(seqTick, interval);
+  } else {
+    seqPlaying = false;
+    clearInterval(seqInterval);
+    btn.textContent = '▶ PLAY';
+    btn.classList.remove('active');
+    document.querySelectorAll('.seq-step.playing').forEach(s => s.classList.remove('playing'));
+  }
+}
+
+function seqTick() {
+  document.querySelectorAll('.seq-step.playing').forEach(s => s.classList.remove('playing'));
+  document.querySelectorAll(`[data-step="${seqStep}"]`).forEach(s => s.classList.add('playing'));
+  if(seqPattern.kick[seqStep]) synth.noteOn(9, 36, 127);
+  if(seqPattern.snare[seqStep]) synth.noteOn(9, 38, 127);
+  if(seqPattern.hihat[seqStep]) synth.noteOn(9, 42, 127);
+  if(seqPattern.note[seqStep]) synth.noteOn(0, 60, 100);
+  seqStep = (seqStep + 1) % 16;
+}
+
+function toggleSeqStep(track, step) {
+  seqPattern[track][step] = seqPattern[track][step]? 0 : 1;
+  document.querySelector(`[data-track="${track}"][data-step="${step}"]`).classList.toggle('active');
+}
+
+function updateBPM(val) {
+  seqBPM = parseInt(val);
+  if(seqPlaying) {
+    toggleSeqPlay();
+    toggleSeqPlay();
+  }
+}
+
+async function loadSF2FromURL() {
+  const url = document.getElementById('sf2-url').value.trim();
+  const status = document.getElementById('sf2-status');
+  if(!url.includes('.sf2')) {
+    status.textContent = '❌ URL harus.sf2';
+    status.style.color = '#FF3B30';
+    return;
+  }
+  const sizeHint = url.includes('Piano.sf2')? '~1GB' : url.includes('FluidR3')? '~148MB' : '~30MB';
+  status.textContent = `⏳ Downloading SF2 ${sizeHint}... Sabar`;
+  status.style.color = 'var(--neon-secondary)';
+  try {
+    if(!synth) synth = new WebAudioTinySynth({quality:1, useReverb:1});
+    await synth.loadSoundFont(url);
+    localStorage.setItem('nexus_sf2_url', url);
+    status.textContent = `✅ Loaded: ${url.split('/').pop()}`;
+    status.style.color = 'var(--neon-accent)';
+    document.getElementById('instrument-select').disabled = false;
+    document.getElementById('mode-toggle').disabled = false;
+    initMIDI();
+  } catch(err) {
+    status.textContent = '❌ Error: ' + err.message + ' | Coba GeneralUser dulu';
+    status.style.color = '#FF3B30';
+  }
+}
+
+function changeInstrument() {
+  if(!synth) return;
+  const instNum = parseInt(document.getElementById('instrument-select').value);
+  synth.programChange(0, instNum);
+  if(instNum === 128 &&!drumMode) toggleMode();
+  if(instNum!== 128 && drumMode) toggleMode();
+}
+
+function playNote(midiNote, vel = currentVelocity) {
+  if(!synth) {
+    document.getElementById('sf2-status').textContent = '⚠️ Klik LOAD SF2 dulu';
+    return;
+  }
+  synth.noteOn(0, midiNote, vel);
+  setTimeout(() => synth.noteOff(0, midiNote), 400);
+}
+
+function updateVelocity(val) {
+  currentVelocity = parseInt(val);
+  document.getElementById('vel-label').textContent = `VEL: ${val}`;
+}
+
+function updatePitchBend(val) {
+  if(!synth) return;
+  const bend = Math.round((val - 64) * 128);
+  synth.pitchBend(0, bend);
+  document.getElementById('pb-label').textContent = `PB: ${val}`;
+}
+
+function updateModWheel(val) {
+  if(!synth) return;
+  synth.controllerChange(0, 1, parseInt(val));
+  document.getElementById('mod-label').textContent = `MOD: ${val}`;
+}
+
+function toggleMode() {
+  drumMode =!drumMode;
+  const btn = document.getElementById('mode-toggle');
+  const kbdArea = document.getElementById('keyboard-area');
+  if(drumMode) {
+    btn.textContent = '🎹 SWITCH TO KEYS';
+    btn.classList.add('active');
+    document.getElementById('instrument-select').value = '128';
+    changeInstrument();
+    kbdArea.innerHTML = `<div class="drum-pad">${DRUM_MAP.map(d => 
+      `<div class="pad" onclick="playNote(${d.note})" data-midi="${d.note}">${d.name}</div>`
+    ).join('')}</div>`;
+  } else {
+    btn.textContent = '🥁 SWITCH TO DRUM PAD';
+    btn.classList.remove('active');
+    kbdArea.innerHTML = `
+      <div class="kbd">
+        ${[60,61,62,63,64,65,66,67,68,69,70,71,72,74].map((n,i) => 
+          `<div class="key ${[1,3,6,8,10].includes(i)?'black':''}" onclick="playNote(${n})" data-midi="${n}"></div>`
+        ).join('')}
+      </div>
+    `;
+  }
+}
+
+function openDecentSampler() {
+  const win = document.createElement('div');
+  win.className = 'window';
+  win.style.left = '40px';
+  win.style.top = '40px';
+  win.style.width = '480px';
+  win.style.zIndex = ++windowZ;
+
+  const savedURL = localStorage.getItem('nexus_sf2_url') || SF2_PRESETS[0].url;
+  let instOptions = GM_INSTRUMENTS.map(i => `<option value="${i.split(':')[0]}">${i}</option>`).join('');
+  let sf2Options = SF2_PRESETS.map(s => `<option value="${s.url}">${s.name}</option>`).join('');
+
+  win.innerHTML = `
+    <div class="window-header">
+      <div class="window-title">DECENT SAMPLER - FINAL BOSS MODE</div>
+      <div class="window-controls">
+        <button class="win-btn" onclick="this.closest('.window').remove()">✕</button>
+      </div>
+    </div>
+    <div class="window-body">
+      <div id="midi-status" class="midi-status">🎹 MIDI: Not connected</div>
+      <select id="sf2-preset" class="instrument-select" onchange="document.getElementById('sf2-url').value=this.value">
+        ${sf2Options}
+      </select>
+      <input id="sf2-url" class="sf2-input" value="${savedURL}">
+      <button class="sf2-btn" onclick="loadSF2FromURL()">⚡ LOAD SF2 FROM URL</button>
+      <div id="sf2-status" class="sf2-status">Ready. Pilih Salamander 1GB atau GeneralUser 30MB</div>
+      <select id="instrument-select" class="instrument-select" onchange="changeInstrument()" disabled>
+        ${instOptions}
+      </select>
+      <button id="mode-toggle" class="mode-toggle" onclick="toggleMode()" disabled>🥁 SWITCH TO DRUM PAD</button>
+      <div class="controls-row">
+        <div class="ctrl-group">
+          <span id="vel-label" class="ctrl-label">VEL: 100</span>
+          <input type="range" min="1" max="127" value="100" class="ctrl-slider" oninput="updateVelocity(this.value)">
         </div>
-        <div style="font-size: 10px; font-family: 'JetBrains Mono'; color: var(--text-dim);">
-            WM: <span id="layout-name" style="color: var(--neon-secondary);">DEFAULT</span> |
-            <span style="color: var(--neon-secondary);">● ONLINE</span>
+        <div class="ctrl-group">
+          <span id="pb-label" class="ctrl-label">PB: 64</span>
+          <input type="range" min="0" max="127" value="64" class="ctrl-slider" oninput="updatePitchBend(this.value)" onmouseup="this.value=64;updatePitchBend(64)">
         </div>
-    </header>
-    <div id="nexus-desktop"></div>
-    <div class="nexus-dock" id="nexus-dock"></div>
-    <script type="module">
-        class NexusWindowManager {
-            constructor() { this.windows = new Map(); this.zIndex = 100; this.layouts = JSON.parse(localStorage.getItem('nexus_layouts') || '{}'); this.init(); }
-            init() { this.createDefaultLayout(); this.initThemeSwitcher(); this.initShortcuts(); window.addEventListener('beforeunload', () => this.saveLayout('default')); if ('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js'); }
-            initThemeSwitcher() { document.querySelectorAll('.theme-btn').forEach(btn => { btn.addEventListener('click', () => { const theme = btn.dataset.theme; document.documentElement.setAttribute('data-theme', theme); document.querySelectorAll('.theme-btn').forEach(b => b.classList.remove('active')); btn.classList.add('active'); localStorage.setItem('nexus_theme', theme); }); }); const savedTheme = localStorage.getItem('nexus_theme') || 'ember'; document.documentElement.setAttribute('data-theme', savedTheme); document.querySelector(`.theme-btn[data-theme="${savedTheme}"]`)?.classList.add('active'); }
-            initShortcuts() { document.addEventListener('keydown', e => { if (e.target.tagName === 'INPUT') return; if (e.code === 'Space') { e.preventDefault(); document.getElementById('masterPlayTrigger').click(); } if (e.ctrlKey && e.code === 'KeyS') { e.preventDefault(); this.saveLayout('studio'); } if (e.ctrlKey && e.code === 'KeyM') { e.preventDefault(); this.windows.forEach(w => w.el.classList.add('minimized')); } }); }
-            createWindow(config) { const id = config.id; if (this.windows.has(id)) { this.focusWindow(id); return; } const win = document.createElement('div'); win.className = 'nexus-window'; win.id = id; win.style.left = config.x || '100px'; win.style.top = config.y || '100px'; win.style.width = config.w || '400px'; win.style.height = config.h || '300px'; win.innerHTML = `<div class="window-titlebar" data-drag="${id}"><span class="title">${config.icon || '📦'} ${config.title}</span><div class="window-controls"><div class="win-btn" data-action="minimize" data-id="${id}">—</div><div class="win-btn" data-action="maximize" data-id="${id}">□</div><div class="win-btn close" data-action="close" data-id="${id}">✕</div></div></div><div class="window-content" id="${id}_content">${config.content || ''}</div><div class="resize-handle n" data-resize="n" data-id="${id}"></div><div class="resize-handle s" data-resize="s" data-id="${id}"></div><div class="resize-handle e" data-resize="e" data-id="${id}"></div><div class="resize-handle w" data-resize="w" data-id="${id}"></div><div class="resize-handle ne" data-resize="ne" data-id="${id}"></div><div class="resize-handle nw" data-resize="nw" data-id="${id}"></div><div class="resize-handle se" data-resize="se" data-id="${id}"></div><div class="resize-handle sw" data-resize="sw" data-id="${id}"></div>`; document.getElementById('nexus-desktop').appendChild(win); this.windows.set(id, { el: win, config }); this.bindWindowEvents(win, id); this.addDockIcon(id, config.icon || '📦'); this.focusWindow(id); }
-            bindWindowEvents(win, id) { win.addEventListener('mousedown', () => this.focusWindow(id)); win.querySelectorAll('[data-action]').forEach(btn => { btn.addEventListener('click', (e) => { e.stopPropagation(); this.windowAction(id, btn.dataset.action); }); }); win.querySelector('[data-drag]').addEventListener('pointerdown', (e) => this.startDrag(e, id)); win.querySelectorAll('[data-resize]').forEach(handle => { handle.addEventListener('pointerdown', (e) => this.startResize(e, id, handle.dataset.resize)); }); }
-            windowAction(id, action) { const win = this.windows.get(id).el; if (action === 'minimize') win.classList.toggle('minimized'); if (action === 'maximize') win.classList.toggle('maximized'); if (action === 'close') { win.remove(); this.windows.delete(id); document.querySelector(`[data-win="${id}"]`)?.remove(); } }
-            focusWindow(id) { this.windows.forEach((w, wid) => { w.el.classList.toggle('active', wid === id); if (wid === id) w.el.style.zIndex = ++this.zIndex; }); }
-            startDrag(e, id) { const win = this.windows.get(id).el; if (win.classList.contains('maximized')) return; win.classList.add('dragging'); const startX = e.clientX - win.offsetLeft, startY = e.clientY - win.offsetTop; const onMove = (e) => { win.style.left = (e.clientX - startX) + 'px'; win.style.top = (e.clientY - startY) + 'px'; }; const onUp = () => { win.classList.remove('dragging'); window.removeEventListener('pointermove', onMove); window.removeEventListener('pointerup', onUp); }; window.addEventListener('pointermove', onMove); window.addEventListener('pointerup', onUp); }
-            startResize(e, id, dir) { const win = this.windows.get(id).el; const startX = e.clientX, startY = e.clientY; const startW = win.offsetWidth, startH = win.offsetHeight; const startL = win.offsetLeft, startT = win.offsetTop; const onMove = (e) => { if (dir.includes('e')) win.style.width = (startW + e.clientX - startX) + 'px'; if (dir.includes('s')) win.style.height = (startH + e.clientY - startY) + 'px'; if (dir.includes('w')) { win.style.width = (startW - e.clientX + startX) + 'px'; win.style.left = (startL + e.clientX - startX) + 'px'; } if (dir.includes('n')) { win.style.height = (startH - e.clientY + startY) + 'px'; win.style.top = (startT + e.clientY - startY) + 'px'; } }; const onUp = () => { window.removeEventListener('pointermove', onMove); window.removeEventListener('pointerup', onUp); }; window.addEventListener('pointermove', onMove); window.addEventListener('pointerup', onUp); }
-            addDockIcon(id, icon) { const dock = document.getElementById('nexus-dock'); const dockIcon = document.createElement('div'); dockIcon.className = 'dock-icon'; dockIcon.textContent = icon; dockIcon.dataset.win = id; dockIcon.onclick = () => { const win = this.windows.get(id).el; if (win.classList.contains('minimized')) win.classList.remove('minimized'); this.focusWindow(id); }; dock.appendChild(dockIcon); }
-            saveLayout(name) { const layout = {}; this.windows.forEach((w, id) => { const el = w.el; layout[id] = { x: el.style.left, y: el.style.top, w: el.style.width, h: el.style.height, config: w.config }; }); this.layouts[name] = layout; localStorage.setItem('nexus_layouts', JSON.stringify(this.layouts)); document.getElementById('layout-name').textContent = name.toUpperCase(); }
-            createDefaultLayout() {
-                this.createWindow({ id: 'win_asset_browser', title: 'Asset Browser', icon: '📁', x: '20px', y: '60px', w: '280px', h: '600px', content: `<div style="padding:10px;font-size:10px;"><div style="margin-bottom:8px;"><b>Project Explorer</b></div><div style="padding:4px;border:1px solid var(--border-hardware);border-radius:4px;margin-bottom:4px;">🥁 808 Drum Kit</div><div style="padding:4px;border:1px solid var(--border-hardware);border-radius:4px;">🎹 Sawtooth Lead</div></div>` });
-                this.createWindow({ id: 'win_playlist', title: 'Playlist Arranger', icon: '🎚️', x: '320px', y: '60px', w: '800px', h: '400px', content: `<div style="padding:10px;font-size:10px;">Timeline Grid + Clips<br><div style="margin-top:10px;height:30px;border-bottom:1px solid var(--border-hardware);display:flex;align-items:center;">Drums</div><div style="height:30px;border-bottom:1px solid var(--border-hardware);display:flex;align-items:center;">Bass</div><div style="height:30px;border-bottom:1px solid var(--border-hardware);display:flex;align-items:center;">Synth</div></div>` });
-                this.createWindow({ id: 'win_pianoroll', title: 'Piano Roll', icon: '🎹', x: '320px', y: '480px', w: '390px', h: '250px', content: `<div style="padding:10px;font-size:10px;">MIDI Editor</div>` });
-                this.createWindow({ id: 'win_sequencer', title: 'Step Sequencer', icon: '🎛️', x: '730px', y: '480px', w: '390px', h: '250px', content: `<div class="pad-matrix" style="padding:10px;">${'<div class="drum-pad"></div>'.repeat(16)}</div>` });
-                this.createWindow({ id: 'win_mixer', title: 'Mixer', icon: '🎚️', x: '1140px', y: '60px', w: '340px', h: '300px', content: `<div style="padding:10px;font-size:10px;">Channel Strips<br><div style="display:flex;gap:8px;margin-top:10px;"><div style="flex:1;text-align:center;"><div class="rotary-knob-hardware"></div><span style="font-size:8px;color:var(--text-dim);">VOL</span></div><div style="flex:1;text-align:center;"><div class="rotary-knob-hardware"></div><span style="font-size:8px;color:var(--text-dim);">PAN</span></div></div></div>` });
-                this.createWindow({ id: 'win_scope', title: 'Oscilloscope', icon: '📊', x: '1140px', y: '380px', w: '340px', h: '200px', content: `<canvas id="scope-canvas" style="width:100%;height:100%;"></canvas>` });
-                this.createWindow({ id: 'win_ai', title: 'AI Composer', icon: '🤖', x: '1500px', y: '60px', w: '300px', h: '180px', content: `<div style="padding:10px;font-size:10px;"><div style="padding:6px;border:1px solid var(--border-hardware);border-radius:4px;margin-bottom:4px;cursor:pointer;">⚡ Generate Melody →</div><div style="padding:6px;border:1px solid var(--border-hardware);border-radius:4px;cursor:pointer;">🥁 Auto-Quantize →</div></div>` });
-                const samplers = [ { id: 'vst_tx16wx', name: 'TX16Wx', icon: '🎹', desc: 'Pro multi-sampler' }, { id: 'vst_decent', name: 'Decent Sampler', icon: '📀', desc: 'Lightweight SFZ' }, { id: 'vst_kontakt', name: 'Kontakt Player', icon: '🎼', desc: 'Industry standard' }, { id: 'vst_labs', name: 'Spitfire LABS', icon: '🎻', desc: 'Free instruments' }, { id: 'vst_sitala', name: 'Sitala', icon: '🥁', desc: '16-pad drum' }, { id: 'vst_sforzando', name: 'sforzando', icon: '🎵', desc: 'Accurate SFZ' }, { id: 'vst_grace', name: 'Grace', icon: '🖱️', desc: 'Visual sampler' }, { id: 'vst_poise', name: 'Poise', icon: '🥁', desc: 'MPC-style' }, { id: 'vst_momentum', name: 'Momentum', icon: '🔄', desc: 'Loop slicer' }, { id: 'vst_halion', name: 'HALion Sonic', icon: '🎹', desc: 'Thousands of sounds' }, { id: 'vst_zampler', name: 'Zampler', icon: '〰️', desc: 'SFZ + wavetable' }, { id: 'vst_instant', name: 'Instant Sampler', icon: '🎙️', desc: 'Live audio buffer' }, { id: 'vst_speedrum', name: 'Speedrum Lite', icon: '⚡', desc: '16 pads' }, { id: 'vst_justasample', name: 'Just a Sample', icon: '1️⃣', desc: 'Drop 1 file' }, { id: 'vst_hz', name: 'HZ Sampler', icon: '🌊', desc: 'Grain + pitch' }, { id: 'vst_independence', name: 'Independence', icon: '🎸', desc: '2GB library' }, { id: 'vst_grooove', name: 'Grooove BPB', icon: '🎯', desc: 'Dual-sample slots' }, { id: 'vst_zebralette', name: 'Zebralette 3', icon: '🦓', desc: 'Audio → wavetable' }, { id: 'vst_kungfaux', name: 'Kung Faux', icon: '📼', desc: 'Lo-fi 12-bit' }, { id: 'vst_serato', name: 'Serato Sample', icon: '🎧', desc: 'Pitch n Time' } ];
-                samplers.forEach((s, i) => { this.createWindow({ id: s.id, title: s.name, icon: s.icon, x: (50 + (i % 5) * 320) + 'px', y: (80 + Math.floor(i / 5) * 280) + 'px', w: '300px', h: '240px', content: `<div style="padding:10px;font-size:10px;"><div style="margin-bottom:8px;color:var(--text-dim);">${s.desc}</div><div style="display:flex;gap:8px;"><div style="flex:1;text-align:center;"><div class="rotary-knob-hardware"></div><span style="font-size:8px;color:var(--text-dim);">TUNE</span></div><div style="flex:1;text-align:center;"><div class="rotary-knob-hardware"></div><span style="font-size:8px;color:var(--text-dim);">FILTER</span></div><div style="flex:1;text-align:center;"><div class="rotary-knob-hardware"></div><span style="font-size:8px;color:var(--text-dim);">VOL</span></div></div></div>` }); document.getElementById(s.id).style.display = 'none'; });
-            }
-        }
-        const WM = new NexusWindowManager();
-        document.getElementById('masterPlayTrigger').onclick = function() { this.classList.toggle('play-active'); };
-        function runScope() { const canvas = document.getElementById('scope-canvas'); if (!canvas) return; const ctx = canvas.getContext('2d'); const w = canvas.width = canvas.offsetWidth; const h = canvas.height = canvas.offsetHeight; ctx.fillStyle = '#05070b'; ctx.fillRect(0, 0, w, h); ctx.strokeStyle = getComputedStyle(document.documentElement).getPropertyValue('--neon-secondary'); ctx.lineWidth = 1.5; ctx.beginPath(); for (let i = 0; i < w; i++) { const y = h/2 + Math.sin(i * 0.05 + Date.now() * 0.003) * h * 0.3; i === 0? ctx.moveTo(i, y) : ctx.lineTo(i, y); } ctx.stroke(); requestAnimationFrame(runScope); }
-        setTimeout(runScope, 100);
-    </script>
+        <div class="ctrl-group">
+          <span id="mod-label" class="ctrl-label">MOD: 0</span>
+          <input type="range" min="0" max="127" value="0" class="ctrl-slider" oninput="updateModWheel(this.value)">
+        </div>
+      </div>
+      <div class="transport">
+        <button id="rec-btn" class="transport-btn rec" onclick="toggleRecord()">● REC</button>
+      </div>
+      <div id="keyboard-area">
+        <div class="kbd">
+          ${[60,61,62,63,64,65,66,67,68,69,70,71,72,74].map((n,i) => 
+            `<div class="key ${[1,3,6,8,10].includes(i)?'black':''}" onclick="playNote(${n})" data-midi="${n}"></div>`
+          ).join('')}
+        </div>
+      </div>
+    </div>
+  `;
+  workspace.appendChild(win);
+  makeDraggable(win);
+}
+
+function openSequencer() {
+  const win = document.createElement('div');
+  win.className = 'window';
+  win.style.left = '540px';
+  win.style.top = '40px';
+  win.style.width = '500px';
+  win.style.zIndex = ++windowZ;
+
+  win.innerHTML = `
+    <div class="window-header">
+      <div class="window-title">16-STEP SEQUENCER - 808 STYLE</div>
+      <div class="window-controls">
+        <button class="win-btn" onclick="this.closest('.window').remove()">✕</button>
+      </div>
+    </div>
+    <div class="window-body">
+      <div class="transport">
+        <button id="seq-play-btn" class="transport-btn play" onclick="toggleSeqPlay()">▶ PLAY</button>
+        <input type="number" class="bpm-input" value="120" min="40" max="240" onchange="updateBPM(this.value)">
+        <span style="color:var(--text-dim);font-size:10px;align-self:center">BPM</span>
+      </div>
+      <div class="sequencer">
+        <div class="seq-row">
+          <div class="seq-label">KICK</div>
+          <div class="seq-steps">
+            ${Array(16).fill(0).map((_,i) => `<div class="seq-step" data-track="kick" data-step="${i}" onclick="toggleSeqStep('kick',${i})"></div>`).join('')}
+          </div>
+        </div>
+        <div class="seq-row">
+          <div class="seq-label">SNARE</div>
+          <div class="seq-steps">
+            ${Array(16).fill(0).map((_,i) => `<div class="seq-step" data-track="snare" data-step="${i}" onclick="toggleSeqStep('snare',${i})"></div>`).join('')}
+          </div>
+        </div>
+        <div class="seq-row">
+          <div class="seq-label">HIHAT</div>
+          <div class="seq-steps">
+            ${Array(16).fill(0).map((_,i) => `<div class="seq-step" data-track="hihat" data-step="${i}" onclick="toggleSeqStep('hihat',${i})"></div>`).join('')}
+          </div>
+        </div>
+        <div class="seq-row">
+          <div class="seq-label">NOTE C4</div>
+          <div class="seq-steps">
+            ${Array(16).fill(0).map((_,i) => `<div class="seq-step" data-track="note" data-step="${i}" onclick="toggleSeqStep('note',${i})"></div>`).join('')}
+          </div>
+        </div>
+      </div>
+    </div>
+  `;
+  workspace.appendChild(win);
+  makeDraggable(win);
+}
+
+function makeDraggable(win) {
+  const header = win.querySelector('.window-header');
+  let isDown = false, offset = [0,0];
+  header.onmousedown = e => {
+    isDown = true;
+    offset = [win.offsetLeft - e.clientX, win.offsetTop - e.clientY];
+    win.style.zIndex = ++windowZ;
+  }
+  document.onmouseup = () => isDown = false;
+  document.onmousemove = e => {
+    if(isDown) {
+      win.style.left = (e.clientX + offset[0]) + 'px';
+      win.style.top = (e.clientY + offset[1]) + 'px';
+    }
+  }
+}
+
+function toggleTheme() {
+  const themes = ['ember','obsidian','cyberpunk'];
+  const current = document.documentElement.getAttribute('data-theme');
+  const next = themes[(themes.indexOf(current)+1)%3];
+  document.documentElement.setAttribute('data-theme', next);
+}
+
+window.onload = () => {
+  openDecentSampler();
+  setTimeout(() => openSequencer(), 500);
+};
+</script>
 </body>
 </html>
